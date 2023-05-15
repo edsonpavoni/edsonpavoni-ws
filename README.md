@@ -1,55 +1,19 @@
-# Astro Starter Kit: Basics
+Website of the artist Edson Pavoni.
 
-```
-npm create astro@latest -- --template basics
-```
+Edson Pavoni (São Paulo, 1984) is an artist and technologist who proposes sensitive imaginaries for our shared ideas of connection.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+His practice, which includes architectural-scale installations, algorithms and digital-based fabrications, AI generated images, poetry, photography, digital platforms and even satellite technology, aims to investigate human intimacy in its intersection with technology.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Through collaborative methods, Pavoni's works create interactive experiences that have the public's participation at its core. As is the case of the "Inumeráveis Memorial", a volunteer-based platform contributing to the humanization of the media coverage regarding the pandemic in Brazil, his works are able to engage thousands of people and have been featured in major newsletters and channels such as CNN, Al Jazeera, Estadão, Globo, El País, and more.
 
-![basics](https://user-images.githubusercontent.com/4677417/186188965-73453154-fdec-4d6b-9c34-cb35c248ae5b.png)
+His work has also unfolded in educational courses and lectures, such as "Building memory through writing - the Inumeráveis Method", taught by the artist and the project volunteers and promoted by UNICAMP, in Brazil. 
 
+In recent years, Pavoni's production has been able to reach an estimate of 1 in every 34 Brazilians. He has shown at Biennials such as the 13th Mercosul Biennial in Porto Alegre, Brazil, and the IX International Biennale of Contemporary Art in Tashkent, Uzbekistan.
 
-## 🚀 Project Structure
+His works have been exhibited in New York, Beijing, Singapore, Dubai, Lisbon and Rio de Janeiro, amongst others cities, and have been presented at institutions such as the Ludwig Museum of Contemporary Art in Budapest, Hungary; Inhotim Institute, Brazil; and at the Design and Fashion Museum of Lisbon, Portugal. His artworks have been commissioned by companies such as Google, Klabin, NuBank, and Accenture.
 
-Inside of your Astro project, you'll see the following folders and files:
+With over 20 years of experience helping creators to use new technologies for propositions in art, communication and architecture, Pavoni has been a part of creative teams that led projects commissioned by enterprises such as the 2016 Rio Olympics and the Inter American Development Bank (IDB).
 
-```
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Pavoni was recognized as one of the 50 most innovative Brazilian professionals by Proxxima Magazine in 2016 and has received two consecutive IF Design Awards in 2017 and 2018. He still contributes to selected and technologically innovative projects through the Spaces&Creatures studio, which he founded in 2010.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `npm install`          | Installs dependencies                            |
-| `npm run dev`          | Starts local dev server at `localhost:3000`      |
-| `npm run build`        | Build your production site to `./dist/`          |
-| `npm run preview`      | Preview your build locally, before deploying     |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+He lives and works in São Paulo.
