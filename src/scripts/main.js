@@ -5,9 +5,10 @@ const btnToggle = document.querySelector(".btn-toggle");
 const iconClose = document.querySelector(".icon-close");
 const iconMenu = document.querySelector(".icon-menu");
 const primaryNav = document.querySelector(".primary-navigation");
+const langNavEn = document.querySelector(".lang-navigation-en");
+const langNavBr = document.querySelector(".lang-navigation-br");
 
 //hide itens on load
-//primaryNav.classList.add('show');
 primaryNav.classList.add('hidden');
 iconClose.classList.add('hidden');
 
@@ -37,6 +38,22 @@ btnToggle.addEventListener('click', () => {
     //remove scroll
     body.classList.toggle('menu-open');
 } )
+
+
+//brower language detection
+
+//language detection
+if (window.location.toString().includes("/en")) {
+    langNavEn.classList.remove('hidden')
+    langNavBr.classList.add('hidden')
+  }
+  else if (window.location.toString().includes("/br")) {
+    langNavEn.classList.add('hidden')
+    langNavBr.classList.remove('hidden')
+  }
+
+//language selection
+
 
 //video player
 import Plyr from 'plyr';
