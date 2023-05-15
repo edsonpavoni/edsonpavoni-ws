@@ -52,10 +52,12 @@ if (window.location.toString().includes("/en")) {
     langNavBr.classList.remove('hidden')
   }
 
-//language selection
+
 
 
 //video player
 import Plyr from 'plyr';
 const player = new Plyr('#player', {});
 const playerInHonor = new Plyr('#player-in-honor', {});
+
+//language selection
