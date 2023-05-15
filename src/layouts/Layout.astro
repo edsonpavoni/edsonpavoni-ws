@@ -1,0 +1,71 @@
+---
+import { GoogleAnalytics } from 'astro-google-analytics';
+export interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Google Analytics -->
+  <GoogleAnalytics id="G-39CDTWZLJ4" />
+
+  <meta charset="UTF-8" />
+  <!-- OG -->
+  <meta property="og:site_name" content="Edson Pavoni">
+  <meta property="og:description" content="Will technology drive us apart or bring us closer together?" />
+  <meta property="og:url" content="https://edsonpavoni.art/" />
+  <meta property="og:image" content="/og-image.jpg" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="https://edsonpavoni.art/favicon.svg" type="image/svg+xml">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  
+  <!-- preventing flash of unstyled content FOUC -->
+  <style type="text/css">
+    .hidden {display:none;}
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    $('html').addClass('hidden');
+    $(document).ready(function() {
+      $('html').show();
+     });  
+   </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,700;1,7..72,400&family=Rufina:wght@700&display=swap"
+      rel="stylesheet">
+    </head>
+
+<body>
+  <header>
+    <div class="container">
+      <button class="btn-toggle" aria-controls="primary-navigation" aria-expanded="false">
+        <img class="icon-menu" src="https://edsonpavoni.art/assets/menu.svg" alt="" aria-hidden="false">
+        <img class="icon-close" src="https://edsonpavoni.art/assets/close.svg" alt="" aria-hidden="true">
+      </button>
+      <div class="primary-navigation" id="primary-navigation">
+        <div class="menu-wrapper forceTextDecorationUnderline">
+          <a href="/about">about</a> <br>
+          <a href="/">artworks</a> <br>
+          <a href="/getintouch">get in touch</a> <br><br>
+          <!-- <a href="#">br</a> / en -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <slot></slot>
+
+  <script> import "../scripts/main.js"; </script>  
+</body>
+
+</html>

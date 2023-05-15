@@ -1,0 +1,21 @@
+{
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^2.1.9",
+    "astro-google-analytics": "^1.0.3",
+    "firebase": "^9.19.1",
+    "plyr": "^3.7.8"
+  },
+  "devDependencies": {
+    "@astrojs/partytown": "^1.2.0"
+  }
+}
