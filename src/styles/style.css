@@ -7,6 +7,7 @@
   --clr-positive-back: #fff;
 
   --clr-negative-front: #e8e8e8;
+  --clr-negative-front-medium: #c9c9c9;
   --clr-negative-back: #101010;
 
   --plyr-color-main: #000000;
@@ -176,29 +177,70 @@ svg {
 
 /* Navigation */
 
-.no-js .primary-navigation {
+.top-navigation {
+  list-style: none;
+  justify-content:end;
+  margin-top: 4em;
+  margin-right: 1em;
+}
+.close-menu {
+  margin-left: auto;
+}
+.close-lang {
+  margin-left: auto;
+  margin-right: 3.8em;
+}
+
+
+.img-btns {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  z-index: 9999;
+}
+
+.primary-nav, .language-nav {
   display: none;
- }
+}
+.primary-nav[data-visible="true"] {
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  background-color: var(--clr-positive-back);
+}
 
-.primary-navigation[data-visible] {
-
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 4;
-    background-color: var(--clr-positive-back);
-    text-align: center;
-  }
+.language-nav[data-visible="true"] {
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  background-color: var(--clr-negative-back);
+}
 
 .menu-wrapper {
-  margin-top: 4em;
+  margin-top: 2.5em;
   font-size: var(--fs-900);
   font-style: italic;
   font-family: var(--ff-reading);
   line-height: 5rem;
+  text-align: center;
 }
+
+
+
+
+
+/* .no-js .primary-nav {
+  display: none;
+ } */
+
 
 body.menu-open {
   overflow: hidden;
@@ -206,16 +248,6 @@ body.menu-open {
 
 
 
-.btn-toggle {
-  position: absolute;
-  top: calc(-1* var(--size-700));
-  right: 0;
-  z-index: 5;
-
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-}
 
 
 /* general styling */
@@ -235,6 +267,11 @@ a:visited { text-decoration: underline; color: var(--clr-positive-front); }
 a:hover { text-decoration: underline; color: var(--clr-positive-front-medium); }
 
 /* utility classes */
+
+.flex {
+  display: flex;
+  gap: 1.2rem;
+}
 
 .hidden {
   display: none;
@@ -322,6 +359,14 @@ a:hover { text-decoration: underline; color: var(--clr-positive-front-medium); }
 .f-style-negative{
     color: var(--clr-negative-front);
     background-color: var(--clr-negative-back);
+}
+
+.f-style-negative a {
+  color: var(--clr-negative-front);
+}
+
+.f-style-negative a:hover {
+  color: var(--clr-negative-front-medium);
 }
 
 .fs-title {

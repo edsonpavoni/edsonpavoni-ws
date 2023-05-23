@@ -48,29 +48,132 @@ const { title } = Astro.props;
 <body>
   <header>
     <div class="container">
-      <button class="btn-toggle" aria-controls="primary-navigation" aria-expanded="false">
-        <img class="icon-menu" src="https://edsonpavoni.art/assets/menu.svg" alt="" aria-hidden="false">
-        <img class="icon-close" src="https://edsonpavoni.art/assets/close.svg" alt="" aria-hidden="true">
-      </button>
-      <div class="primary-navigation" id="primary-navigation">
-        <div class="menu-wrapper forceTextDecorationUnderline">
+      <nav>
+          <ul class="top-navigation flex">
+            <li>
+              <button class="language-nav-btn img-btns" aria-controls="lang-nav">
+                  <img class="lang-icon-menu" src="/assets/_language.svg">
+              </button>
+            <li>
+              <button class="primary-nav-btn img-btns" aria-controls="pri-nav">
+                <img class="icon-lang" src="/assets/_menu.svg">
+              </button>
+          </ul>
+      </nav>
+    </div>
 
-          <div class="lang-navigation-en">
-            <a href="/en/about">about</a> <br>
-            <a href="/en">artworks</a> <br>
-            <a href="/en/getintouch">get in touch</a> <br><br>
-            <a href="/br">br</a> / en
-          </div>
-
-          <div class="lang-navigation-br">
-            <a href="/br/about">sobre</a> <br>
-            <a href="/br">trabalhos</a> <br>
-            <a href="/br/getintouch">contato</a> <br><br>
-            br / <a href="/en">en</a>
-          </div>
-          
+    
+      <nav>
+        <div class="primary-nav" data-visible="false">
+          <div class="container">
+          <button class="close-menu img-btns top-navigation flex">
+            <img class="menu-icon-close" src="/assets/_close.svg">
+          </button>
         </div>
+            <div class="menu-wrapper">
+              
+              <div class="menu-navigation-en">
+                <a href="/en/">works</a> <br>
+                <a href="/en/about">about</a> <br>
+                <a href="http://eepurl.com/irTtbU" target="_blank">newsletter</a> <br>
+                <a href="/en/getintouch">contact</a>
+              </div>
+
+              <div class="menu-navigation-br">
+                <a href="/en/">trabalhos</a> <br>
+                <a href="/en/about">sobre</a> <br>
+                <a href="http://eepurl.com/irTtbU" target="_blank">newsletter</a> <br>
+                <a href="/en/getintouch">contato</a>
+              </div>
+
+              <div class="menu-navigation-es">
+                <a href="/en/">obras</a> <br>
+                <a href="/en/about">acerca</a> <br>
+                <a href="http://eepurl.com/irTtbU" target="_blank">newsletter</a> <br>
+                <a href="/en/getintouch">contacto</a>
+              </div>
+
+              <div class="menu-navigation-cn">
+                <a href="/en/">艺术品</a> <br>
+                <a href="/en/about">关于</a> <br>
+                <a href="http://eepurl.com/irTtbU" target="_blank">通讯</a> <br>
+                <a href="/en/getintouch">接触</a>
+              </div>
+
+            </div>
+        </div>
+      </nav>
+    </div>
+
+      <nav>
+        <div class="language-nav f-style-negative" data-visible="false">
+          <div class="container">
+            <button class="close-lang img-btns top-navigation flex">
+              <img class="lang-icon-close" src="/assets/_closeNegative.svg">
+            </button>
+          </div>
+              <div class="menu-wrapper f-style-negative">
+                <div class="lang-navigation-en">
+                  english <br>
+                  <a href="/br">brasileiro</a> <br>
+                  <a href="/es">español</a> <br>
+                  <a href="/cn">中国人</a> <br>
+                </div>
+
+                <div class="lang-navigation-br">
+                  <a href="/en">english</a> <br>
+                  brasileiro<br>
+                  <a href="/es">español</a> <br>
+                  <a href="/cn">中国人</a> <br>
+                </div>
+
+                <div class="lang-navigation-es">
+                  <a href="/en">english</a> <br>
+                  <a href="/br">brasileiro</a> <br>
+                  español<br>
+                  <a href="/cn">中国人</a> <br>
+                </div>
+
+                <div class="lang-navigation-cn">
+                  <a href="/en">english</a> <br>
+                  <a href="/br">brasileiro</a> <br>
+                  <a href="/es">español</a> <br>
+                  中国人<br>
+                </div>
+
+              </div>
+          </div>
+        </nav>
       </div>
+
+      <!-- <div class="menu">
+        <button class="btn-toggle" aria-controls="primary-navigation" aria-expanded="false">
+          <img class="icon-menu" src="/assets/menu.svg" alt="" aria-hidden="false">
+          <img class="icon-close" src="/assets/close.svg" alt="" aria-hidden="true">
+        </button>
+
+        <div class="primary-navigation" id="primary-navigation">
+          <div class="menu-wrapper forceTextDecorationUnderline">
+
+            <div class="lang-navigation-en">
+              <a href="/en/about">about</a> <br>
+              <a href="/en">artworks</a> <br>
+              <a href="/en/getintouch">get in touch</a> <br><br>
+              <a href="/br">br</a> / en
+            </div>
+
+            <div class="lang-navigation-br">
+              <a href="/br/about">sobre</a> <br>
+              <a href="/br">trabalhos</a> <br>
+              <a href="/br/getintouch">contato</a> <br><br>
+              br / <a href="/en">en</a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      
+
     </div>
   </header>
 
