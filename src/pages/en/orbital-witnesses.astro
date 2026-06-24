@@ -1,0 +1,301 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/style.css";
+import "plyr/dist/plyr.css";
+
+// Orbital Witnesses — collection / showcase page for edsonpavoni.art
+// v0.2 (2026-06-22): grid index of the twelve + one photograph per witness.
+// Photos: Edson Pavoni (graded in DaVinci, exported sRGB ~2048px).
+// Conceptual page (like orbital-temple). No prices. Inquiry is a private conversation.
+// Mechanism copy is deliberately hedged: the production firmware runs the ~54s
+// choreography (code/experiments/16_witness_choreography), not live telemetry.
+
+const base = "/assets/pages/orbital-witnesses/witnesses";
+
+// The twelve. Image = ow{N}_a (hero angle). Texts locked in CURATORIAL.md.
+const witnesses = [
+  {
+    n: "One", img: "ow1_a.jpg",
+    poem: "who can be accepted, who shall be denied, I'm god, as I witness the heavens I've created and destroyed",
+    body: "The series opens by claiming the throne: the voice that decides who enters and who is turned away, the bureaucracy of admission spoken in the first person of a god. It is the position the other eleven spend the series answering.",
+  },
+  {
+    n: "Two", img: "ow2_a.jpg",
+    poem: "trembling before reaching the ocean, a river looks back on her journey, oblivious to the pleasure of becoming",
+    body: "The opposite of the claim. Not a god who judges, but a river afraid to dissolve. At the meeting point with something larger she looks back and fears disappearing, unaware that disappearing is the pleasure.",
+  },
+  {
+    n: "Three", img: "ow3_a.jpg",
+    poem: "there is a sword glowing with flames, blocking the path to the third heaven, they say",
+    body: "The legend of the barred heaven, held at arm's length by \"they say.\" The doubt is the content: a gate everyone believes in and no one has seen.",
+  },
+  {
+    n: "Four", img: "ow4_a.jpg",
+    poem: "although bottomless, the sacred space is never empty",
+    body: "We believe we carry no dogma; we do. The sacred space is the room in us where inherited moral intuition lives, and it has no floor where the conditioning stops. Descend as far as you want, it is furnished all the way down.",
+  },
+  {
+    n: "Five", img: "ow5_a.jpg",
+    poem: "standing half Oxum, half mirror, a woman showing no fear of being naked opens her eyes looking exactly into mine, and without moving anything but her arm, takes a rose crystal egg from the place in her body that bleeds",
+    body: "The first gate is the body. Oxum, the Yoruba orisha of fresh water and sensuality, stands without shame and looks back at the witness, locating the sacred not in the sky but in the flesh that bleeds. The first subject in the series who returns the gaze.",
+  },
+  {
+    n: "Six", img: "ow6_a.jpg",
+    poem: "Das coisas que me ligam à terra, meu filho e essa dor nas costas",
+    gloss: "(Among the things that ground me to the earth, my son and this pain in my back.)",
+    body: "One witness turns away from the heavens and names what wires it to the ground: a son, and a body that hurts. Not symbols, the most material things a life contains. In Portuguese, <span class=\"fw-italic\">ligam</span> is the language of circuits, the same word as the electrical ground itself: the two connections that keep him plugged into this life instead of the next.",
+  },
+  {
+    n: "Seven", img: "ow7_a.jpg",
+    poem: "what pays for grace? No need to pay they say. behave.",
+    body: "Every heaven advertises free admission. This witness asks who is actually paying, and answers in a single muttered command. Grace costs nothing at the gate because the price was already collected, in the shape a life had to take to qualify.",
+  },
+  {
+    n: "Eight", img: "ow8_a.jpg",
+    poem: "in search for just the right amount of freedom",
+    body: "Between the loneliness of too much freedom and the erasure of too little, the witness walks looking for the exact livable distance. The most recognizable position in the series: everyone has walked this walk.",
+  },
+  {
+    n: "Nine", img: "ow9_a.jpg",
+    poem: "Designed to reach the third heaven, now, mostly used for fun",
+    body: "The satellite, the rocket, the aspiration, all built to reach heaven, all drifted toward the market and the amusement. Not a complaint, a diagnosis: the gap between what a thing was for and what we actually do with it.",
+  },
+  {
+    n: "Ten", img: "ow10_a.jpg",
+    poem: "nevertheless not thy will, but mine be done",
+    body: "In the garden the original prayer surrenders: not my will, but thine be done. This witness reverses it. The creature takes back the sentence and claims its own will against the one who designed the orbit.",
+  },
+  {
+    n: "Eleven", img: "ow11_a.jpg",
+    poem: "I again make an alliance with mystery",
+    body: "After all the arguing, the mature move: not solving the mystery, not dismissing it, but re-entering a relationship with it. \"Again\" is the key. The peace that earns the final silence.",
+  },
+  {
+    n: "Twelve", img: "ow12_a.jpg",
+    poem: "silent",
+    body: "The twelfth carries no text. Its silence is not absence but the space the other eleven gather around. What the satellite sees on its passes over every claimed sky cannot be fully spoken. Eleven voices and one silence make the set an open question rather than a closed argument.",
+  },
+];
+---
+
+<Layout title="Orbital Witnesses - Edson Pavoni">
+    <main>
+        <section>
+            <div class="container">
+                <div class="welcome-tile margin-top-900">
+                    <span class="fs-logo margin-top-600">Edson Pavoni</span>
+                    <h1 class="fs-display fw-bold text-positive margin-top-200">
+                        Orbital<br />Witnesses
+                    </h1>
+                </div>
+
+                <div class="fs-label fstyle-label margin-top-600">
+                    kinetic sculpture series / 2026
+                </div>
+
+                <div class="artwork | margin-top-500">
+                    <span class="fs-sub-title">Who, down here, is watching the sky we have already claimed?</span><br
+                    /><br />
+                    The <span class="fstyle-label">Orbital Temple</span> satellite circles the Earth carrying thousands
+                    of names. The <span class="fstyle-label">Orbital Witnesses</span> are the terrestrial body of that
+                    orbit: twelve objects that make an invisible presence tactile, present, and accountable.
+                    <br /><br />
+                    Twelve sculptures. Twelve texts. Twelve witnesses to the same invisible orbit.
+                </div>
+
+                <!-- HERO MOTION VIDEO — first image people see (text hook sits above it).
+                     Muted autoplay loop, encoded from documentation/Video Edits/website_001.mp4. -->
+                <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    poster={`${base}/motion_poster.jpg`}
+                    class="video-scale margin-top-300"
+                >
+                    <source src={`${base}/motion.webm`} type="video/webm" />
+                    <source src={`${base}/motion.mp4`} type="video/mp4" />
+                </video>
+                <div class="fs-caption text-caption padding-block-caption">
+                    <span class="fstyle-label">Orbital Witnesses</span>, 2026. The Witnesses keeping the orbit's rhythm.
+                </div>
+
+                <!-- GRID INDEX OF THE TWELVE -->
+                <div class="margin-top-500">
+                    <span class="fs-sub-title">The Twelve</span>
+                    <br /><br />
+                    Eleven are engraved, each in the artist's own handwriting. One is silent by design.
+                    Tap a witness to read it.
+                </div>
+
+                <div class="witness-grid margin-top-300">
+                    {witnesses.map((w, i) => (
+                        <a href={`#w${i + 1}`} aria-label={`Witness ${w.n}`}>
+                            <img src={`${base}/${w.img}`} loading="lazy" alt={`Orbital Witness ${w.n}`} />
+                        </a>
+                    ))}
+                </div>
+
+                <!--
+                  MECHANISM — copy is true under the production choreography
+                  (code/experiments/16_witness_choreography, ~54s cycle). Do NOT
+                  sharpen into a literal live-tracking claim: the tracker prototype
+                  uses a stand-in TLE, and the piece performs the orbit's rhythm.
+                -->
+                <div class="margin-top-600">
+                    <span class="fs-sub-title">How does it work?</span>
+                    <br /><br />
+                    Each Witness carries a brushless motor and a microcontroller. The metal pointer turns to
+                    trace the satellite's passage overhead, then stills when the orbit has moved on, and waits
+                    for it to return.
+                    <br /><br />
+                    Movement, then rest. The piece keeps the rhythm of something it cannot see.
+                </div>
+
+                <img
+                    class="margin-top-400"
+                    src={`${base}/ow4_d.jpg`}
+                    loading="lazy"
+                    alt="Close view of an Orbital Witness: the engraved copper lid and the pointer crossing it."
+                />
+                <div class="fs-caption text-caption padding-block-caption">
+                    The pointer crossing the engraved lid.<br />Photo by Edson Pavoni.
+                </div>
+
+                <div class="fs-eye | margin-top-400">
+                    The series does not offer a single voice. It offers a constellation.
+                </div>
+
+                <div class="margin-top-400">
+                    Twelve texts drawn from a range of positions: the colonized heaven, the bureaucracy of
+                    admission and denial, the witness who refuses transcendence, the witness who surrenders
+                    to it, the one drinking on a beach while others resolve the universe with certainty.
+                    Together they form an argument about what it means to watch a sky that someone has
+                    already claimed, already divided, already named as sacred or forbidden.
+                    <br /><br />
+                    No single witness completes the argument. The series is the argument.
+                </div>
+
+                <!-- THE TWELVE — one photograph + text per witness -->
+                {witnesses.map((w, i) => (
+                    <div id={`w${i + 1}`} class="witness-block margin-top-600">
+                        <img
+                            src={`${base}/${w.img}`}
+                            loading="lazy"
+                            alt={`Orbital Witness ${w.n} on a white wall.`}
+                        />
+                        <div class="margin-top-200">
+                            <span class="fstyle-label">Witness {w.n}</span>
+                            <span class="witness-poem" set:html={w.poem} />
+                            {w.gloss && <span class="witness-poem-gloss" set:html={w.gloss} />}
+                            <span class="witness-body" set:html={w.body} />
+                        </div>
+                    </div>
+                ))}
+
+                <div class="margin-top-600">
+                    <span class="fs-sub-title">Materials and form</span>
+                    <br /><br />
+                    Each Witness pairs a warm metal lid, brass, copper, or aluminum, with a black
+                    3D-printed body and a metal pointer that moves. The line on each lid is engraved in the
+                    artist's own handwriting, vectorized and cut on a fiber laser. Brass receives the
+                    engraving with depth and contrast; you have to lean in to read it.
+                    <br /><br />
+                    The pairing of warm, ancient metal with a synthetic, contemporary body is not incidental.
+                    These sculptures are about the meeting of the technological and the human. The materials
+                    carry that meeting in their skin.
+                    <br /><br />
+                    Diameters range from 23 to 56 cm. Each is a unique work.
+                </div>
+
+                <!-- DETAIL GALLERY -->
+                <img class="margin-top-400" src={`${base}/ow4_b.jpg`} loading="lazy" alt="Detail of an engraved copper lid." />
+                <img class="margin-top-200" src={`${base}/ow5_b.jpg`} loading="lazy" alt="An Orbital Witness with a copper lid." />
+                <img class="margin-top-200" src={`${base}/ow11_b.jpg`} loading="lazy" alt="An Orbital Witness, metal pointer at rest." />
+                <div class="fs-caption text-caption padding-block-caption">
+                    Details from the <span class="fstyle-label">Orbital Witnesses</span> series.<br />Photo by Edson Pavoni.
+                </div>
+
+                <div class="margin-top-500">
+                    <span class="fs-sub-title">Part of Orbital Temple</span>
+                    <br /><br />
+                    The <span class="fstyle-label">Orbital Witnesses</span> are the terrestrial counterpart of
+                    <a href="/en/orbital-temple">Orbital Temple</a>, the first artistic orbital satellite from
+                    the Global South. The satellite carries the names; the Witnesses keep watch.
+                </div>
+
+                <div class="fs-eye | margin-top-500">
+                    Each Witness is a unique work, and there are twelve.<br />
+                    If one of them is speaking to you,
+                    <a href="/en/getintouch"> write to me</a>.
+                </div>
+
+                <!-- EXHIBITIONS — confirmed by Edson 2026-06-22 -->
+                <div class="exhibithion | margin-top-500">
+                    <span class="fs-sub-title">Exhibitions</span>
+                    <br /><br />
+                    <span class="fw-bold">2026</span><br />
+                    Maintain Frame Control<br />
+                    Curated by Millie Benson<br />
+                    14BC Gallery, New York, USA
+                </div>
+
+                <!-- CREDITS -->
+                <div class="fs-credits | margin-top-500">
+                    <span class="fs-sub-title">Credits</span>
+                    <br /><br />
+                    Edson Pavoni, artist
+                    <br /><br />
+                    <span class="fs-credits-bold">Photography</span><br />
+                    Edson Pavoni
+                    <br /><br /><br /><br />
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .witness-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    .witness-grid a {
+        position: relative;
+        display: block;
+        border-bottom: none;
+    }
+    .witness-grid img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        display: block;
+    }
+    .witness-block {
+        scroll-margin-top: 1.5rem;
+    }
+    /* Poem treatment: the engraved line as the centerpiece. */
+    .witness-poem {
+        display: block;
+        margin-top: 0.85rem;
+        font-style: italic;
+        font-size: var(--fs-500);
+        line-height: 1.45;
+    }
+    .witness-poem-gloss {
+        display: block;
+        margin-top: 0.6rem;
+        font-style: italic;
+        color: var(--clr-positive-front-light);
+    }
+    .witness-body {
+        display: block;
+        margin-top: 1.1rem;
+    }
+    @media (max-width: 480px) {
+        .witness-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>

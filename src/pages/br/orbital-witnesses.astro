@@ -1,0 +1,290 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/style.css";
+import "plyr/dist/plyr.css";
+
+// Testemunhas Orbitais — versão PT-BR da página (espelha en/orbital-witnesses.astro).
+// Decisão (2026-06-23): os poemas GRAVADOS permanecem na língua em que estão na peça
+// (inglês; a Seis em português). Apenas a prosa ao redor é traduzida.
+// Fotos: Edson Pavoni. Mecânica descrita de forma fiel à coreografia (~54s), não telemetria ao vivo.
+
+const base = "/assets/pages/orbital-witnesses/witnesses";
+
+const witnesses = [
+  {
+    n: "Um", img: "ow1_a.jpg",
+    poem: "who can be accepted, who shall be denied, I'm god, as I witness the heavens I've created and destroyed",
+    body: "A série se abre reivindicando o trono: a voz que decide quem entra e quem é recusado, a burocracia da admissão falada na primeira pessoa de um deus. É a posição que as outras onze passam a série inteira respondendo.",
+  },
+  {
+    n: "Dois", img: "ow2_a.jpg",
+    poem: "trembling before reaching the ocean, a river looks back on her journey, oblivious to the pleasure of becoming",
+    body: "O oposto da reivindicação. Não um deus que julga, mas um rio com medo de se dissolver. No ponto de encontro com algo maior, ela olha para trás e teme desaparecer, sem saber que desaparecer é o prazer.",
+  },
+  {
+    n: "Três", img: "ow3_a.jpg",
+    poem: "there is a sword glowing with flames, blocking the path to the third heaven, they say",
+    body: "A lenda do céu interditado, mantida à distância por um \"dizem\". A dúvida é o conteúdo: um portão em que todos acreditam e que ninguém viu.",
+  },
+  {
+    n: "Quatro", img: "ow4_a.jpg",
+    poem: "although bottomless, the sacred space is never empty",
+    body: "Acreditamos não carregar nenhum dogma; mas carregamos. O espaço sagrado é o cômodo em nós onde vive a intuição moral herdada, e ele não tem um piso onde o condicionamento termina. Desça o quanto quiser, está mobiliado até o fundo.",
+  },
+  {
+    n: "Cinco", img: "ow5_a.jpg",
+    poem: "standing half Oxum, half mirror, a woman showing no fear of being naked opens her eyes looking exactly into mine, and without moving anything but her arm, takes a rose crystal egg from the place in her body that bleeds",
+    body: "O primeiro portão é o corpo. Oxum, a orixá iorubá das águas doces e da sensualidade, permanece sem vergonha e devolve o olhar à testemunha, localizando o sagrado não no céu, mas na carne que sangra. O primeiro sujeito da série a devolver o olhar.",
+  },
+  {
+    n: "Seis", img: "ow6_a.jpg",
+    poem: "Das coisas que me ligam à terra, meu filho e essa dor nas costas",
+    body: "Uma testemunha se afasta dos céus e nomeia o que a liga ao chão: um filho, e um corpo que dói. Não símbolos, as coisas mais materiais que uma vida contém. Em português, <span class=\"fw-italic\">ligam</span> é a linguagem dos circuitos, a mesma palavra do aterramento elétrico: as duas conexões que o mantêm ligado a esta vida em vez da próxima.",
+  },
+  {
+    n: "Sete", img: "ow7_a.jpg",
+    poem: "what pays for grace? No need to pay they say. behave.",
+    body: "Todo céu anuncia entrada gratuita. Esta testemunha pergunta quem está de fato pagando, e responde num único comando murmurado. A graça não custa nada no portão porque o preço já foi cobrado, na forma que uma vida teve de assumir para se qualificar.",
+  },
+  {
+    n: "Oito", img: "ow8_a.jpg",
+    poem: "in search for just the right amount of freedom",
+    body: "Entre a solidão de liberdade em excesso e o apagamento de liberdade de menos, a testemunha caminha à procura da distância exata em que se possa viver. A posição mais reconhecível da série: todos já fizeram essa caminhada.",
+  },
+  {
+    n: "Nove", img: "ow9_a.jpg",
+    poem: "Designed to reach the third heaven, now, mostly used for fun",
+    body: "O satélite, o foguete, a aspiração, tudo construído para alcançar o céu, tudo desviado para o mercado e o entretenimento. Não uma queixa, um diagnóstico: a distância entre aquilo para que uma coisa servia e aquilo que de fato fazemos com ela.",
+  },
+  {
+    n: "Dez", img: "ow10_a.jpg",
+    poem: "nevertheless not thy will, but mine be done",
+    body: "No jardim, a oração original se rende: não a minha vontade, mas a tua seja feita. Esta testemunha a inverte. A criatura retoma a frase e reivindica a própria vontade contra aquele que projetou a órbita.",
+  },
+  {
+    n: "Onze", img: "ow11_a.jpg",
+    poem: "I again make an alliance with mystery",
+    body: "Depois de toda a discussão, o gesto maduro: não resolver o mistério, não descartá-lo, mas voltar a se relacionar com ele. O \"novamente\" é a chave. A paz que merece o silêncio final.",
+  },
+  {
+    n: "Doze", img: "ow12_a.jpg",
+    poem: "em silêncio",
+    body: "A décima segunda não carrega texto. Seu silêncio não é ausência, mas o espaço ao redor do qual as outras onze se reúnem. O que o satélite vê em suas passagens sobre cada céu reivindicado não pode ser plenamente dito. Onze vozes e um silêncio fazem do conjunto uma pergunta aberta, e não um argumento fechado.",
+  },
+];
+---
+
+<Layout title="Testemunhas Orbitais - Edson Pavoni">
+    <main>
+        <section>
+            <div class="container">
+                <div class="welcome-tile margin-top-900">
+                    <span class="fs-logo margin-top-600">Edson Pavoni</span>
+                    <h1 class="fs-display fw-bold text-positive margin-top-200">
+                        Testemunhas<br />Orbitais
+                    </h1>
+                </div>
+
+                <div class="fs-label fstyle-label margin-top-600">
+                    série de esculturas cinéticas / 2026
+                </div>
+
+                <div class="artwork | margin-top-500">
+                    <span class="fs-sub-title">Quem, aqui embaixo, observa o céu que já reivindicamos?</span><br
+                    /><br />
+                    O satélite <span class="fstyle-label">Templo Orbital</span> circunda a Terra carregando milhares
+                    de nomes. As <span class="fstyle-label">Testemunhas Orbitais</span> são o corpo terrestre dessa
+                    órbita: doze objetos que tornam uma presença invisível tátil, presente e responsável.
+                    <br /><br />
+                    Doze esculturas. Doze textos. Doze testemunhas da mesma órbita invisível.
+                </div>
+
+                <!-- VÍDEO PRINCIPAL — primeira imagem (o verso poético fica acima). Loop mudo em autoplay. -->
+                <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    poster={`${base}/motion_poster.jpg`}
+                    class="video-scale margin-top-300"
+                >
+                    <source src={`${base}/motion.webm`} type="video/webm" />
+                    <source src={`${base}/motion.mp4`} type="video/mp4" />
+                </video>
+                <div class="fs-caption text-caption padding-block-caption">
+                    <span class="fstyle-label">Testemunhas Orbitais</span>, 2026. As Testemunhas mantendo o ritmo da órbita.
+                </div>
+
+                <!-- ÍNDICE DAS DOZE -->
+                <div class="margin-top-500">
+                    <span class="fs-sub-title">As Doze</span>
+                    <br /><br />
+                    Onze são gravadas, cada uma com a própria caligrafia do artista. Uma é silenciosa por concepção.
+                    Toque em uma testemunha para lê-la.
+                </div>
+
+                <div class="witness-grid margin-top-300">
+                    {witnesses.map((w, i) => (
+                        <a href={`#w${i + 1}`} aria-label={`Testemunha ${w.n}`}>
+                            <img src={`${base}/${w.img}`} loading="lazy" alt={`Testemunha Orbital ${w.n}`} />
+                        </a>
+                    ))}
+                </div>
+
+                <!-- MECÂNICA — fiel à coreografia de produção (~54s). Não afirmar rastreamento ao vivo. -->
+                <div class="margin-top-600">
+                    <span class="fs-sub-title">Como funciona?</span>
+                    <br /><br />
+                    Cada Testemunha carrega um motor sem escovas e um microcontrolador. O ponteiro de metal gira para
+                    traçar a passagem do satélite no céu, depois se aquieta quando a órbita se afasta, e espera que
+                    ela retorne.
+                    <br /><br />
+                    Movimento, depois repouso. A peça mantém o ritmo de algo que não pode ver.
+                </div>
+
+                <img
+                    class="margin-top-400"
+                    src={`${base}/ow4_d.jpg`}
+                    loading="lazy"
+                    alt="Vista aproximada de uma Testemunha Orbital: a tampa de cobre gravada e o ponteiro a cruzá-la."
+                />
+                <div class="fs-caption text-caption padding-block-caption">
+                    O ponteiro cruzando a tampa gravada.<br />Foto de Edson Pavoni.
+                </div>
+
+                <div class="fs-eye | margin-top-400">
+                    A série não oferece uma única voz. Oferece uma constelação.
+                </div>
+
+                <div class="margin-top-400">
+                    Doze textos extraídos de uma variedade de posições: o céu colonizado, a burocracia da admissão
+                    e da negação, a testemunha que recusa a transcendência, a testemunha que se entrega a ela,
+                    aquela que bebe numa praia enquanto outros resolvem o universo com certeza. Juntos formam um
+                    argumento sobre o que significa observar um céu que alguém já reivindicou, já dividiu, já
+                    nomeou como sagrado ou proibido.
+                    <br /><br />
+                    Nenhuma testemunha sozinha completa o argumento. A série é o argumento.
+                </div>
+
+                <!-- AS DOZE — uma fotografia + texto por testemunha -->
+                {witnesses.map((w, i) => (
+                    <div id={`w${i + 1}`} class="witness-block margin-top-600">
+                        <img
+                            src={`${base}/${w.img}`}
+                            loading="lazy"
+                            alt={`Testemunha Orbital ${w.n} em uma parede branca.`}
+                        />
+                        <div class="margin-top-200">
+                            <span class="fstyle-label">Testemunha {w.n}</span>
+                            <span class="witness-poem" set:html={w.poem} />
+                            <span class="witness-body" set:html={w.body} />
+                        </div>
+                    </div>
+                ))}
+
+                <div class="margin-top-600">
+                    <span class="fs-sub-title">Materiais e forma</span>
+                    <br /><br />
+                    Cada Testemunha combina uma tampa de metal quente, latão, cobre ou alumínio, com um corpo preto
+                    impresso em 3D e um ponteiro de metal que se move. A linha em cada tampa é gravada com a própria
+                    caligrafia do artista, vetorizada e cortada em um laser de fibra. O latão recebe a gravação com
+                    profundidade e contraste; é preciso se aproximar para ler.
+                    <br /><br />
+                    A união de um metal quente e antigo com um corpo sintético e contemporâneo não é acidental.
+                    Essas esculturas falam do encontro entre o tecnológico e o humano. Os materiais carregam esse
+                    encontro na própria pele.
+                    <br /><br />
+                    Os diâmetros variam de 23 a 56 cm. Cada uma é uma obra única.
+                </div>
+
+                <!-- GALERIA DE DETALHES -->
+                <img class="margin-top-400" src={`${base}/ow4_b.jpg`} loading="lazy" alt="Detalhe de uma tampa de cobre gravada." />
+                <img class="margin-top-200" src={`${base}/ow5_b.jpg`} loading="lazy" alt="Uma Testemunha Orbital com tampa de cobre." />
+                <img class="margin-top-200" src={`${base}/ow11_b.jpg`} loading="lazy" alt="Uma Testemunha Orbital, ponteiro de metal em repouso." />
+                <div class="fs-caption text-caption padding-block-caption">
+                    Detalhes da série <span class="fstyle-label">Testemunhas Orbitais</span>.<br />Foto de Edson Pavoni.
+                </div>
+
+                <div class="margin-top-500">
+                    <span class="fs-sub-title">Parte do Templo Orbital</span>
+                    <br /><br />
+                    As <span class="fstyle-label">Testemunhas Orbitais</span> são a contraparte terrestre do
+                    <a href="/br/orbital-temple">Templo Orbital</a>, o primeiro satélite orbital artístico do Sul
+                    Global. O satélite carrega os nomes; as Testemunhas vigiam.
+                </div>
+
+                <div class="fs-eye | margin-top-500">
+                    Cada Testemunha é uma obra única, e são doze.<br />
+                    Se uma delas estiver falando com você,
+                    <a href="/br/getintouch"> escreva para mim</a>.
+                </div>
+
+                <!-- EXPOSIÇÕES -->
+                <div class="exhibithion | margin-top-500">
+                    <span class="fs-sub-title">Exposições</span>
+                    <br /><br />
+                    <span class="fw-bold">2026</span><br />
+                    Maintain Frame Control<br />
+                    Curadoria de Millie Benson<br />
+                    14BC Gallery, Nova York, EUA
+                </div>
+
+                <!-- CRÉDITOS -->
+                <div class="fs-credits | margin-top-500">
+                    <span class="fs-sub-title">Créditos</span>
+                    <br /><br />
+                    Edson Pavoni, artista
+                    <br /><br />
+                    <span class="fs-credits-bold">Fotografia</span><br />
+                    Edson Pavoni
+                    <br /><br /><br /><br />
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .witness-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    .witness-grid a {
+        position: relative;
+        display: block;
+        border-bottom: none;
+    }
+    .witness-grid img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        display: block;
+    }
+    .witness-block {
+        scroll-margin-top: 1.5rem;
+    }
+    /* Tratamento do poema: a linha gravada como centro. */
+    .witness-poem {
+        display: block;
+        margin-top: 0.85rem;
+        font-style: italic;
+        font-size: var(--fs-500);
+        line-height: 1.45;
+    }
+    .witness-poem-gloss {
+        display: block;
+        margin-top: 0.6rem;
+        font-style: italic;
+        color: var(--clr-positive-front-light);
+    }
+    .witness-body {
+        display: block;
+        margin-top: 1.1rem;
+    }
+    @media (max-width: 480px) {
+        .witness-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>
