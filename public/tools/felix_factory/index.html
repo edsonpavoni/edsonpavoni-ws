@@ -52,9 +52,22 @@
   th, td { text-align: left; padding: .35em .6em; border-bottom: 1px solid var(--line); }
   th { color: var(--muted); font-weight: 600; }
   .unsupported { background: var(--fail-bg); border: 1px solid #eac2bf; color: var(--fail); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.2rem; display: none; }
+  #gate { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; align-items: center; justify-content: center; }
+  #gate .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 2rem 2.2rem; width: min(90vw, 360px); text-align: center; }
+  #gate h2 { font-size: 1.2rem; margin-bottom: .3rem; }
+  #gate p { color: var(--muted); font-size: .88rem; margin-bottom: 1.1rem; }
+  #gate input { width: 100%; font: inherit; padding: .6em .8em; border: 1px solid var(--line); border-radius: 8px; margin-bottom: .8rem; text-align: center; }
+  #gate .err { color: var(--fail); font-size: .85rem; min-height: 1.2em; margin-top: .6rem; }
 </style>
 </head>
 <body>
+<div id="gate"><div class="card">
+  <h2>Felix Factory</h2>
+  <p>This tool is private. Enter the password to continue.</p>
+  <input type="password" id="gatePw" placeholder="password" autocomplete="current-password">
+  <button class="primary" id="gateBtn" style="width:100%">Enter</button>
+  <div class="err" id="gateErr"></div>
+</div></div>
 <main>
   <header><h1>Felix Factory</h1><span class="sub">test &amp; provisioning</span></header>
   <p class="sub">Plug the unit in over USB, then follow the steps top to bottom. Green means done. Red stops the line.</p>
@@ -309,9 +322,17 @@ async function flashFirmware() {
   $("flashCard").className = "step running";
   try {
     det.textContent = "loading firmware.hex…";
-    const hexResp = await fetch("firmware.hex");
-    if (!hexResp.ok) throw new Error("no firmware bundled with this copy of the page — flashing happens at the factory (run felix_factory.py --serve locally)");
-    const text = await hexResp.text();
+    let text = null;
+    const hexResp = await fetch("firmware.hex").catch(() => null);
+    if (hexResp && hexResp.ok) text = await hexResp.text();
+    else if (gateKey) {
+      const er = await fetch("firmware.hex.enc").catch(() => null);
+      if (er && er.ok) {
+        const e = await er.json();
+        text = new TextDecoder().decode(await gcmDecrypt(gateKey, e.iv, e.data));
+      }
+    }
+    if (!text) throw new Error("no firmware bundled with this copy of the page — flashing happens at the factory (run felix_factory.py --serve locally)");
     const { mem, min, max } = parseIntelHex(text);
     const size = max - FLASH_BASE;
     const image = new Uint8Array(Math.ceil(size / BLOCK) * BLOCK).fill(0xFF);
@@ -770,6 +791,57 @@ $("csvBtn").onclick = async () => {
       .map(x => `"${String(x ?? "").replace(/"/g, '""')}"`).join(","))).join("\n");
   download("felix-units.csv", csv, "text/csv");
 };
+
+/* ---------- password gate (web copies only; local copies have no gate.json) ----------
+   The firmware is AES-GCM-encrypted with the page password (publish_web.py), so the
+   gate is real: a wrong password cannot decrypt anything. */
+let gateKey = null;
+async function deriveGateKey(password, saltB64) {
+  const salt = Uint8Array.from(atob(saltB64), c => c.charCodeAt(0));
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 200000, hash: "SHA-256" },
+                                 base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+}
+async function gcmDecrypt(key, ivB64, dataB64) {
+  const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
+  const data = Uint8Array.from(atob(dataB64), c => c.charCodeAt(0));
+  return new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data));
+}
+async function initGate() {
+  let gi = null;
+  try {
+    const r = await fetch("gate.json", { cache: "no-store" });
+    if (r.ok) gi = await r.json();
+  } catch {}
+  if (!gi) return; // local copy: no gate
+  const tryPw = async pw => {
+    try {
+      const key = await deriveGateKey(pw, gi.salt);
+      const ok = new TextDecoder().decode(await gcmDecrypt(key, gi.check_iv, gi.check));
+      if (ok === "felix-ok") { gateKey = key; return true; }
+    } catch {}
+    return false;
+  };
+  let saved = "";
+  try { saved = atob(localStorage.getItem("felix-gate-pw") || ""); } catch {}
+  if (saved && await tryPw(saved)) return;
+  $("gate").style.display = "flex";
+  $("gatePw").focus();
+  const attempt = async () => {
+    const pw = $("gatePw").value;
+    $("gateErr").textContent = "checking…";
+    if (await tryPw(pw)) {
+      try { localStorage.setItem("felix-gate-pw", btoa(pw)); } catch {}
+      $("gate").style.display = "none";
+    } else {
+      $("gateErr").textContent = "wrong password";
+      $("gatePw").select();
+    }
+  };
+  $("gateBtn").onclick = attempt;
+  $("gatePw").addEventListener("keydown", e => { if (e.key === "Enter") attempt(); });
+}
+initGate();
 
 /* ---------- boot ---------- */
 if (!("serial" in navigator)) {
