@@ -792,6 +792,7 @@ async function runAll() {
   const unitNo = cert.edition ?? (currentStatus && currentStatus.edition ? currentStatus.edition : "(unprovisioned)");
   v.textContent = (failed ? "✗ FAIL — do not ship this unit" : `✓ PASS — unit ${unitNo} ready to box`) +
                   `  ·  ${cert.operator}, ${cert.date.replace("T", " ")}`;
+  lastCert = cert;
   $("certBtn").disabled = false;
   saveCert();
   $("runBtn").disabled = false; $("runBtn").textContent = "Run again";
@@ -844,8 +845,13 @@ function download(name, text, type) {
   a.href = URL.createObjectURL(new Blob([text], { type }));
   a.download = name; a.click();
 }
-$("certBtn").onclick = () =>
-  download(`unit-${cert.edition ?? "unprovisioned"}-${cert.date?.replace(/[:T]/g, "-")}.json`, JSON.stringify(cert, null, 2), "application/json");
+let lastCert = null;
+$("certBtn").onclick = () => {
+  const c = lastCert || cert;
+  const kind = c.type === "attest" ? "-attest" : "";
+  download(`unit-${c.edition ?? "unprovisioned"}${kind}-${(c.date || "").replace(/[:T]/g, "-")}.json`,
+           JSON.stringify(c, null, 2), "application/json");
+};
 $("csvBtn").onclick = async () => {
   const rows = await allCerts();
   const csv = ["date,edition,firmware,result,detail"].concat(rows.map(c =>
@@ -940,9 +946,8 @@ function attestDecide(pass) {
   try {
     db().then(d => d.transaction("certs", "readwrite").objectStore("certs").add(acert)).then(renderHistory);
   } catch {}
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(acert, null, 2)], { type: "application/json" }));
-  a.download = `unit-${unitNo}-attest-${acert.date.replace(/[:T]/g, "-")}.json`; a.click();
+  lastCert = acert; //saved to history; "Download certificate" offers it — no auto-download
+  $("certBtn").disabled = false;
   attestExit();
 }
 
