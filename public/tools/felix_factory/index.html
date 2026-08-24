@@ -52,6 +52,27 @@
   th, td { text-align: left; padding: .35em .6em; border-bottom: 1px solid var(--line); }
   th { color: var(--muted); font-weight: 600; }
   .unsupported { background: var(--fail-bg); border: 1px solid #eac2bf; color: var(--fail); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.2rem; display: none; }
+  /* A2.5: closed-box attest mode */
+  #attest { display: none; }
+  .nixie-row { display: flex; gap: .5rem; align-items: center; justify-content: center; margin: 1.2rem 0; }
+  .tube { width: 3.2rem; height: 4.6rem; background: #17130e; border: 1px solid #3a2f22; border-radius: .7rem;
+          display: flex; align-items: center; justify-content: center;
+          font: 600 2.6rem/1 "SF Mono", ui-monospace, monospace; color: #2a2118; }
+  .tube.lit { color: #ff9d3c; text-shadow: 0 0 10px #ff7a00, 0 0 22px #ff5e00; }
+  .tube.spin::after { content: "8"; animation: spinDigits .12s steps(1) infinite; }
+  @keyframes spinDigits { 0%{content:"3"} 25%{content:"7"} 50%{content:"1"} 75%{content:"9"} }
+  .ndot { width: .55rem; height: .55rem; border-radius: 50%; background: #2a2118; margin-left: .2rem; }
+  .ndot.solid { background: #ff9d3c; box-shadow: 0 0 8px #ff7a00; }
+  .ndot.blink { animation: dotBlink 1s steps(1) infinite; }
+  .ndot.breathe { animation: dotBreathe 2s ease-in-out infinite; }
+  @keyframes dotBlink { 0%,49% { background:#ff9d3c; box-shadow:0 0 8px #ff7a00; } 50%,100% { background:#2a2118; box-shadow:none; } }
+  @keyframes dotBreathe { 0%,100% { background:#2a2118; box-shadow:none; } 50% { background:#ff9d3c; box-shadow:0 0 10px #ff7a00; } }
+  .attest-actions { display: flex; gap: .8rem; justify-content: center; margin-top: 1rem; }
+  .attest-actions button { font-size: 1rem; padding: .8em 1.6em; }
+  .attest-actions .yes { background: var(--pass); color: #fff; border-color: var(--pass); }
+  .attest-actions .no { background: var(--fail); color: #fff; border-color: var(--fail); }
+  #attestStage { text-align: center; }
+  #attestCountdown { color: var(--muted); font: 13px var(--mono); margin-top: .4rem; }
   #gate { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; align-items: center; justify-content: center; }
   #gate .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 2rem 2.2rem; width: min(90vw, 360px); text-align: center; }
   #gate h2 { font-size: 1.2rem; margin-bottom: .3rem; }
@@ -71,6 +92,7 @@
 <main>
   <header><h1>Felix Factory</h1><span class="sub">test &amp; provisioning</span></header>
   <p class="sub">Plug the unit in over USB, then follow the steps top to bottom. Green means done. Red stops the line.</p>
+  <p class="sub" style="font-size:.85rem">Requirements: <b>Google Chrome or Microsoft Edge on a computer</b> (Mac, Windows or Linux — phones, tablets, Safari and Firefox will not work) · a USB data cable to the unit · a quiet room for the listening steps.</p>
   <div class="unsupported" id="unsupported">This tool needs Chrome or Edge on a computer (Web Serial). Open this page in Chrome.</div>
 
   <div class="badges" id="badges">
@@ -80,7 +102,7 @@
     <span class="badge">SD <b id="b-sd">—</b></span>
     <span class="badge">mode <b id="b-mode">—</b></span>
     <span class="badge">flash <b id="b-helper">checking…</b></span>
-    <span class="badge">operator <b id="b-op">—</b></span>
+    <span class="badge" id="opBadge" style="cursor:pointer" title="click to change operator">operator <b id="b-op">—</b></span>
   </div>
 
   <div class="bigbar">
@@ -88,8 +110,9 @@
     <button id="disconnectBtn" style="display:none">Disconnect</button>
     <button id="runBtn" disabled>Run all steps</button>
     <span class="spacer"></span>
-    <label class="opt"><input type="checkbox" id="optGenre"> genre tracks</label>
-    <label class="opt"><input type="checkbox" id="optClean"> cleaning test</label>
+    <button id="attestBtn" title="test a CLOSED, assembled unit — no cable needed">Closed-box attest</button>
+    <label class="opt"><input type="checkbox" id="optGenre" checked> genre tracks</label>
+    <label class="opt"><input type="checkbox" id="optClean" checked> cleaning test</label>
   </div>
 
   <div class="step" id="flashCard">
@@ -100,6 +123,21 @@
   </div>
 
   <div id="steps"></div>
+
+  <div id="attest">
+    <div class="step" id="attestCard">
+      <div id="attestStage">
+        <h2 id="attestTitle" style="font-size:1.15rem;margin:.2rem 0 .3rem"></h2>
+        <p id="attestDesc" class="sub" style="margin-bottom:0"></p>
+        <div class="nixie-row" id="attestNixie"></div>
+        <div id="attestCountdown"></div>
+        <div class="attest-actions">
+          <button class="yes" id="attestYes">Looks right — PASS</button>
+          <button class="no" id="attestNo">Not doing that — FAIL</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="verdict"></div>
   <div class="bigbar" style="position:static">
     <button id="certBtn" disabled>Download certificate</button>
@@ -570,7 +608,7 @@ const STEPS = [
       if (currentStatus.mode !== "B") return fail(s, "flip the rear toggle to BPM and rerun");
       pass(s, `fw ${currentStatus.fw}, cal ${currentStatus.cal.toFixed(1)}`);
     } },
-  { id: "provision", title: "Set edition number", input: { placeholder: "unit #", min: 1, max: 9999 }, run: async (s) => {
+  { id: "provision", title: "Set edition number", input: { placeholder: "#", min: 1, max: 9999 }, run: async (s) => {
       const v = parseInt(s.inputEl.value, 10);
       if (!v) { skip(s, "no number entered — kept existing"); return; }
       const m = await expect(/EDITION SET: unit #(\d+)/, 5000, `E${v}\n`);
@@ -792,6 +830,119 @@ $("csvBtn").onclick = async () => {
   download("felix-units.csv", csv, "text/csv");
 };
 
+/* ---------- A2.5: closed-box attest mode ----------
+   Phase 2 of the factory flow (Edson's design): the assembled, closed unit sits
+   next to the screen; the page plays the reference audio on a timeline and
+   shows an illustration of what the unit SHOULD be doing; a person attests
+   each stage. No cable, no serial — works in any modern browser. */
+const ATTEST_STAGES = [
+  { id: "thinking", title: "Silence — the unit thinks", dur: 25,
+    desc: "Keep the room quiet. Tubes stay blank; the dot breathes slowly (~2 s cycle). If the tubes are fully dark with NO dot at all, the unit is asleep — tap the table or play a second of music, wait, and start this stage again.",
+    tubes: "    ", dot: "breathe" },
+  { id: "lock120", title: "120 BPM — the lock", dur: 50, audio: () => playTrack(120, beatBar, 48),
+    desc: "The beat plays. Within ~15 s the tubes light and settle on 120.0 (±2), dot solid. The number holds steady while the beat plays.",
+    tubes: "1200", dot: "solid", dotAfter: 3 },
+  { id: "change97", title: "Tempo change — 97 BPM hip hop", dur: 45, audio: () => playTrack(97, hiphopBar, 43),
+    desc: "The music changes. The unit takes a while to believe it — within ~25 s the number migrates to 97.5 (±2) and holds.",
+    tubes: "0975", dot: "solid", dotAfter: 3 },
+  { id: "holding", title: "Music stops — the hold", dur: 30,
+    desc: "Silence again. The last number STAYS on the tubes with the dot blinking crisply (1 per second) for ~15 s, then the tubes go blank and the dot returns to slow breathing.",
+    tubes: "0975", dot: "blink" },
+  { id: "sleep", title: "A minute of silence — sleep", dur: 75,
+    desc: "Stay quiet and watch: about a minute after the music stopped, the dot blinks twice and the unit goes COMPLETELY dark. Dark tubes, no dot: that is sleep, and it is correct.",
+    tubes: "    ", dot: "off" },
+  { id: "wake", title: "Music returns — the wake", dur: 40, audio: () => playTrack(120, beatBar, 38),
+    desc: "The beat returns. The unit wakes with a brief spin of all digits, then shows 120.0 within ~20 s. (Waking from sleep takes longer than a normal lock — that is expected.)",
+    tubes: "spin", dot: "solid", dotAfter: 5 },
+  { id: "dbmode", title: "dB mode — the flip", dur: 30,
+    desc: "Flip the rear toggle to dB. The tubes show the room level — a quiet room reads roughly 40-70. Talk near it and the number rises. Flip back to BPM when done.",
+    tubes: "0584", dot: "solid" },
+];
+let attestActive = false, attestIdx = 0, attestResults = {}, attestAudio = null, attestTimer = null;
+
+function renderNixie(tubes, dot) {
+  const host = $("attestNixie"); host.innerHTML = "";
+  for (let i = 0; i < 4; i++) {
+    const ch = tubes === "spin" ? "" : (tubes[i] || " ");
+    const d = document.createElement("div");
+    d.className = "tube" + (tubes === "spin" ? " lit spin" : (ch.trim() ? " lit" : ""));
+    d.textContent = tubes === "spin" ? "" : (ch.trim() ? ch : "");
+    host.appendChild(d);
+    if (i === 2) { // decimal dot sits after the third tube
+      const nd = document.createElement("div");
+      nd.className = "ndot " + (dot === "off" ? "" : dot);
+      nd.id = "attestDot";
+      host.appendChild(nd);
+    }
+  }
+}
+
+function attestShowStage() {
+  const st = ATTEST_STAGES[attestIdx];
+  $("attestTitle").textContent = `${attestIdx + 1} / ${ATTEST_STAGES.length} — ${st.title}`;
+  $("attestDesc").textContent = st.desc;
+  renderNixie(st.tubes, st.dotAfter ? "off" : st.dot);
+  if (st.dotAfter) setTimeout(() => { const d = $("attestDot"); if (d) d.className = "ndot " + st.dot; }, st.dotAfter * 1000);
+  if (attestAudio) { try { attestAudio.stop(); } catch {} attestAudio = null; }
+  if (st.audio) attestAudio = st.audio();
+  let left = st.dur;
+  clearInterval(attestTimer);
+  $("attestCountdown").textContent = `watch the unit · ${left} s`;
+  attestTimer = setInterval(() => {
+    left--;
+    $("attestCountdown").textContent = left > 0 ? `watch the unit · ${left} s` : "decide: did the unit do this?";
+    if (left <= 0) clearInterval(attestTimer);
+  }, 1000);
+}
+
+function attestDecide(pass) {
+  const st = ATTEST_STAGES[attestIdx];
+  attestResults[st.id] = { pass, title: st.title };
+  attestIdx++;
+  if (attestIdx < ATTEST_STAGES.length) { attestShowStage(); return; }
+  // done
+  clearInterval(attestTimer);
+  if (attestAudio) { try { attestAudio.stop(); } catch {} attestAudio = null; }
+  const failed = Object.values(attestResults).some(r => !r.pass);
+  const unitNo = (prompt("Unit number on the engraving (for the certificate):") || "").trim() || "unknown";
+  const acert = { tool: "felix-factory-web v1", type: "attest", date: new Date().toISOString().slice(0, 19),
+                  operator: operatorName(), edition: unitNo, steps: attestResults,
+                  result: failed ? "ATTEST-FAIL" : "ATTEST-PASS" };
+  const v = $("verdict");
+  v.className = failed ? "fail" : "pass";
+  v.textContent = (failed ? "✗ ATTEST FAIL — inspect this unit" : `✓ ATTEST PASS — unit ${unitNo}, closed-box behavior correct`) +
+                  `  ·  ${acert.operator}, ${acert.date.replace("T", " ")}`;
+  try {
+    db().then(d => d.transaction("certs", "readwrite").objectStore("certs").add(acert)).then(renderHistory);
+  } catch {}
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(acert, null, 2)], { type: "application/json" }));
+  a.download = `unit-${unitNo}-attest-${acert.date.replace(/[:T]/g, "-")}.json`; a.click();
+  attestExit();
+}
+
+function attestEnter() {
+  attestActive = true; attestIdx = 0; attestResults = {};
+  $("steps").style.display = "none"; $("flashCard").style.display = "none";
+  $("verdict").className = ""; $("verdict").style.display = "none"; $("verdict").textContent = "";
+  $("attest").style.display = "block";
+  $("attestBtn").textContent = "Exit attest mode";
+  operatorName();
+  attestShowStage();
+}
+function attestExit() {
+  attestActive = false;
+  clearInterval(attestTimer);
+  if (attestAudio) { try { attestAudio.stop(); } catch {} attestAudio = null; }
+  $("attest").style.display = "none";
+  $("steps").style.display = ""; $("flashCard").style.display = "";
+  $("verdict").style.display = "";
+  $("attestBtn").textContent = "Closed-box attest";
+}
+$("attestBtn").onclick = () => attestActive ? attestExit() : attestEnter();
+$("attestYes").onclick = () => attestDecide(true);
+$("attestNo").onclick = () => attestDecide(false);
+
 /* ---------- password gate (web copies only; local copies have no gate.json) ----------
    The firmware is AES-GCM-encrypted with the page password (publish_web.py), so the
    gate is real: a wrong password cannot decrypt anything. */
@@ -863,7 +1014,7 @@ $("connectBtn").onclick = async () => {
     if (st) {
       currentStatus = st; showBadges(st);
       const prov = STEPS.find(x => x.id === "provision");
-      if (prov && st.edition) prov.inputEl.placeholder = "#" + st.edition;
+      if (prov) prov.inputEl.placeholder = "#";
     }
   } catch (e) { log("! " + e.message); }
 };
@@ -888,6 +1039,11 @@ fetch("firmware.version").then(r => r.ok ? r.text() : "").then(v => {
   $("b-helper").textContent = ok ? "helper ✓" : "browser only";
 })();
 try { const op = localStorage.getItem("felix-operator"); if (op) $("b-op").textContent = op; } catch {}
+$("opBadge").onclick = () => {
+  const cur = (() => { try { return localStorage.getItem("felix-operator") || ""; } catch { return ""; } })();
+  const op = (prompt("Operator name or initials:", cur) || "").trim();
+  if (op) { try { localStorage.setItem("felix-operator", op); } catch {} $("b-op").textContent = op; }
+};
 </script>
 </body>
 </html>
