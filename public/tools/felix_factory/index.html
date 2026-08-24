@@ -145,7 +145,7 @@
   </div>
 
   <details><summary>Certificate history (this computer)</summary><table id="histTable"><thead><tr><th>date</th><th>edition</th><th>firmware</th><th>result</th></tr></thead><tbody></tbody></table></details>
-  <details open><summary>Serial log</summary><div id="log"></div></details>
+  <details open><summary>Serial log <button id="logCopy" style="font-size:12px;padding:.3em .8em;margin-left:.6em">copy</button></summary><div id="log"></div></details>
 </main>
 
 <script>
@@ -673,7 +673,9 @@ const STEPS = [
       pass(s, "starts in silence, aborts on music, progress kept");
       await wait(20);
     } },
-  { id: "calibrate", title: "dBA calibration", input: { placeholder: "ref dBA", min: 40, max: 120, step: 0.1 }, run: async (s) => {
+  { id: "calibrate", title: "dBA calibration",
+    hint: "optional — needs a reference level meter/calibrator next to the unit; type its dBA reading and run. Leave empty to keep the current calibration.",
+    input: { placeholder: "ref dBA", min: 40, max: 120, step: 0.1 }, run: async (s) => {
       const ref = parseFloat(s.inputEl.value);
       if (!ref) { skip(s, "no reference entered — factory default kept"); return; }
       note(s, "flip the rear toggle to dB…");
@@ -685,7 +687,12 @@ const STEPS = [
       const dbas = rows.map(r => r.dba).filter(x => x !== undefined);
       if (!dbas.length) return fail(s, "no dBA readings");
       const measured = dbas.reduce((a, b) => a + b) / dbas.length;
-      const newOffset = st.cal + (ref - measured);
+      const delta = ref - measured;
+      if (Math.abs(delta) > 10 &&
+          !confirm(`This shifts the calibration by ${delta > 0 ? "+" : ""}${delta.toFixed(1)} dB (measured ${measured.toFixed(1)}, reference ${ref}). With a real calibrator coupled to the mic this can be legitimate — but if you just typed a number to test, cancel.`)) {
+        skip(s, "cancelled — calibration unchanged"); return;
+      }
+      const newOffset = st.cal + delta;
       const m = await expect(/CAL SET: dBA offset ([\d.]+)/, 5000, `K${newOffset.toFixed(1)}\n`);
       if (!m) return fail(s, "calibration write failed");
       cert.calibration = { measured: +measured.toFixed(1), reference: ref, offset: +m[1] };
@@ -696,7 +703,9 @@ const STEPS = [
       if (!st || st.mode !== "B") return fail(s, "toggle never returned to BPM");
       pass(s, `measured ${measured.toFixed(1)}, reference ${ref}, offset → ${m[1]}`);
     } },
-  { id: "reset", title: "Factory reset (as-shipped)", run: async (s) => {
+  { id: "reset", title: "Factory reset — prepare for shipping",
+    hint: "run LAST, after everything passes: puts the unit back to as-shipped state so the BUYER gets the first-boot moment. Cleaning schedule restarts, edition and calibration are kept. It only makes the unit forget it was ever tested.",
+    run: async (s) => {
       const m = await expect(/FACTORY RESET: as-shipped/, 5000, "R");
       if (!m) return fail(s, "no reset confirmation");
       pass(s, "schedule re-armed, first-boot moment armed, edition + calibration kept");
@@ -717,6 +726,7 @@ function buildSteps() {
   STEPS.forEach((s, i) => {
     s.box = el(`<div class="step"><div class="step-head"><span class="num">${i + 2}</span><span class="title">${s.title}</span><span class="controls"></span></div><div class="detail"></div><progress value="0" max="1" style="display:none;margin-top:.5rem"></progress></div>`);
     s.detailEl = s.box.querySelector(".detail");
+    if (s.hint) s.detailEl.textContent = s.hint;
     s.progEl = s.box.querySelector("progress");
     const controls = s.box.querySelector(".controls");
     if (s.input) {
@@ -744,10 +754,24 @@ async function execStep(s) {
   }
 }
 
+function updateVerdict() {
+  const entries = Object.entries(cert.steps);
+  if (!entries.length) return;
+  const failed = entries.some(([, v]) => !v.pass);
+  cert.result = failed ? "FAIL" : "PASS";
+  const unitNo = cert.edition ?? (currentStatus && currentStatus.edition ? currentStatus.edition : "(unprovisioned)");
+  const v = $("verdict");
+  v.className = failed ? "fail" : "pass";
+  v.textContent = (failed ? "✗ FAIL — do not ship this unit" : `✓ PASS — unit ${unitNo} ready to box`) +
+                  `  ·  ${cert.operator || operatorName()}, ${(cert.date || "").replace("T", " ")}` +
+                  (failed ? "" : "  ·  (updated after rerun)");
+}
+
 async function runOne(s) {
   if (running || !serial.reader) return;
   running = true;
   await execStep(s);
+  updateVerdict();
   running = false;
 }
 
@@ -1002,7 +1026,13 @@ if (!("serial" in navigator)) {
 }
 buildSteps();
 renderHistory();
-serial.listeners.add(l => { if (!/Running for time|Processing took|remainder|Tempo display|RMS level|Detected tempo|Onsets|Dominance|Gate state|HistPeaks|SPL level/.test(l)) log(l); });
+serial.listeners.add(l => { if (!/Running for time|Processing took|remainder|Tempo display|RMS level|Detected tempo|Onsets|Dominance|Gate state|HistPeaks|SPL level|Dividing tempo|Multiplying tempo|-----/.test(l)) log(l); });
+$("logCopy").onclick = async (e) => {
+  e.preventDefault(); e.stopPropagation();
+  try { await navigator.clipboard.writeText(logEl.textContent); $("logCopy").textContent = "copied ✓"; }
+  catch { $("logCopy").textContent = "copy failed"; }
+  setTimeout(() => $("logCopy").textContent = "copy", 2000);
+};
 $("connectBtn").onclick = async () => {
   try {
     await serial.connect();
