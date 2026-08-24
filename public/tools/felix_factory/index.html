@@ -703,12 +703,12 @@ const STEPS = [
       if (!st || st.mode !== "B") return fail(s, "toggle never returned to BPM");
       pass(s, `measured ${measured.toFixed(1)}, reference ${ref}, offset → ${m[1]}`);
     } },
-  { id: "reset", title: "Factory reset — prepare for shipping",
-    hint: "run LAST, after everything passes: puts the unit back to as-shipped state so the BUYER gets the first-boot moment. Cleaning schedule restarts, edition and calibration are kept. It only makes the unit forget it was ever tested.",
+  { id: "reset", title: "Package for shipping",
+    hint: "the last step before the box closes: nothing is lost — edition and calibration stay. It only re-arms the unit's first-boot moment so the BUYER sees it, and restarts the cleaning schedule. After this, put it in the box.",
     run: async (s) => {
       const m = await expect(/FACTORY RESET: as-shipped/, 5000, "R");
       if (!m) return fail(s, "no reset confirmation");
-      pass(s, "schedule re-armed, first-boot moment armed, edition + calibration kept");
+      pass(s, "ready for the box — first-boot moment armed for the buyer, edition + calibration kept");
     } },
 ];
 
