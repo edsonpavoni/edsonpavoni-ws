@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Felix Factory</title>
+<style>
+  :root {
+    --bg: #f4f2ee; --card: #ffffff; --ink: #1d1c1a; --muted: #7a756c;
+    --line: #e3dfd7; --accent: #c8611a; --pass: #1e7d3c; --pass-bg: #e6f4ea;
+    --fail: #b3261e; --fail-bg: #fbeae9; --run-bg: #fdf3e7; --skip: #9a948a;
+    --mono: "SF Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, "Helvetica Neue", sans-serif; padding: 2rem 1rem 6rem; }
+  main { max-width: 720px; margin: 0 auto; }
+  header { display: flex; align-items: baseline; gap: .75rem; margin-bottom: .3rem; }
+  h1 { font-size: 1.6rem; letter-spacing: .01em; }
+  .sub { color: var(--muted); margin-bottom: 1.5rem; }
+  .badges { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.5rem; }
+  .badge { font: 12.5px/1 var(--mono); background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: .45em .9em; color: var(--muted); }
+  .badge b { color: var(--ink); font-weight: 600; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: .6rem; transition: border-color .2s; }
+  .step.running { border-color: var(--accent); background: var(--run-bg); }
+  .step.pass { background: var(--pass-bg); border-color: #bcd9c4; }
+  .step.fail { background: var(--fail-bg); border-color: #eac2bf; }
+  .step-head { display: flex; align-items: center; gap: .8rem; }
+  .num { font: 600 12px/1 var(--mono); color: var(--muted); background: var(--bg); border-radius: 6px; padding: .4em .55em; min-width: 2.2em; text-align: center; }
+  .step.pass .num { background: var(--pass); color: #fff; }
+  .step.fail .num { background: var(--fail); color: #fff; }
+  .step.running .num { background: var(--accent); color: #fff; }
+  .title { font-weight: 600; flex: 1; }
+  .detail { color: var(--muted); font-size: .87rem; margin-top: .35rem; margin-left: 3rem; }
+  .step.fail .detail { color: var(--fail); }
+  .controls { margin-left: auto; display: flex; gap: .5rem; align-items: center; }
+  button { font: 600 14px/1 inherit; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: .6em 1.1em; cursor: pointer; }
+  button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  button.primary:hover { background: #000; }
+  button:disabled { opacity: .4; cursor: default; }
+  input[type=number] { font: inherit; width: 6.5em; padding: .45em .6em; border: 1px solid var(--line); border-radius: 8px; background: var(--card); }
+  label.opt { font-size: .87rem; color: var(--muted); display: inline-flex; gap: .4em; align-items: center; margin-right: 1rem; }
+  .bigbar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: .6rem 0 1rem; display: flex; gap: .6rem; align-items: center; }
+  .spacer { flex: 1; }
+  progress { width: 100%; height: 6px; accent-color: var(--accent); }
+  #verdict { display: none; border-radius: 12px; padding: 1.2rem 1.3rem; margin: 1rem 0; font-size: 1.2rem; font-weight: 700; }
+  #verdict.pass { display: block; background: var(--pass); color: #fff; }
+  #verdict.fail { display: block; background: var(--fail); color: #fff; }
+  #log { font: 12px/1.5 var(--mono); background: #16150f; color: #b9b3a6; border-radius: 10px; padding: .9rem 1rem; height: 9rem; overflow-y: auto; white-space: pre-wrap; margin-top: 1.4rem; }
+  details summary { color: var(--muted); cursor: pointer; margin-top: 1.4rem; font-size: .87rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; margin-top: .6rem; }
+  th, td { text-align: left; padding: .35em .6em; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  .unsupported { background: var(--fail-bg); border: 1px solid #eac2bf; color: var(--fail); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.2rem; display: none; }
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Felix Factory</h1><span class="sub">test &amp; provisioning</span></header>
+  <p class="sub">Plug the unit in over USB, then follow the steps top to bottom. Green means done. Red stops the line.</p>
+  <div class="unsupported" id="unsupported">This tool needs Chrome or Edge on a computer (Web Serial). Open this page in Chrome.</div>
+
+  <div class="badges" id="badges">
+    <span class="badge">fw <b id="b-fw">—</b></span>
+    <span class="badge">edition <b id="b-ed">—</b></span>
+    <span class="badge">cal <b id="b-cal">—</b></span>
+    <span class="badge">SD <b id="b-sd">—</b></span>
+    <span class="badge">mode <b id="b-mode">—</b></span>
+    <span class="badge">flash <b id="b-helper">checking…</b></span>
+    <span class="badge">operator <b id="b-op">—</b></span>
+  </div>
+
+  <div class="bigbar">
+    <button class="primary" id="connectBtn">1 · Connect unit</button>
+    <button id="disconnectBtn" style="display:none">Disconnect</button>
+    <button id="runBtn" disabled>Run all steps</button>
+    <span class="spacer"></span>
+    <label class="opt"><input type="checkbox" id="optGenre"> genre tracks</label>
+    <label class="opt"><input type="checkbox" id="optClean"> cleaning test</label>
+  </div>
+
+  <div class="step" id="flashCard">
+    <div class="step-head"><span class="num">F</span><span class="title">Flash firmware <span id="flashTarget" style="color:var(--muted);font-weight:400;font-size:.85rem"></span></span>
+    <span class="controls"><button id="flashBtn" disabled>Flash…</button></span></div>
+    <div class="detail" id="flashDetail">optional — writes the pinned release over USB (box open, during assembly). Reliable path: start the page with `python3 factory/felix_factory.py --serve` and Flash is fully automatic.</div>
+    <progress id="flashProg" value="0" max="1" style="display:none;margin-top:.5rem"></progress>
+  </div>
+
+  <div id="steps"></div>
+  <div id="verdict"></div>
+  <div class="bigbar" style="position:static">
+    <button id="certBtn" disabled>Download certificate</button>
+    <button id="csvBtn">Export all units (CSV)</button>
+  </div>
+
+  <details><summary>Certificate history (this computer)</summary><table id="histTable"><thead><tr><th>date</th><th>edition</th><th>firmware</th><th>result</th></tr></thead><tbody></tbody></table></details>
+  <details open><summary>Serial log</summary><div id="log"></div></details>
+</main>
+
+<script>
+"use strict";
+/* Felix Factory browser tool — A2.2 (v1, Web Serial only; WebHID flashing lands in A2.3).
+   The serial protocol is the contract proven by factory/felix_factory.py:
+   V status · E<n> edition · T<epoch> clock · K<offset> calibration · R factory reset ·
+   C force cleaning · D log dump — plus the always-on telemetry stream. */
+
+const $ = id => document.getElementById(id);
+const logEl = $("log");
+function log(line) {
+  logEl.textContent += line + "\n";
+  const lines = logEl.textContent.split("\n");
+  if (lines.length > 600) logEl.textContent = lines.slice(-500).join("\n");
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+/* ---------- serial ---------- */
+const serial = {
+  port: null, reader: null, buffer: "", listeners: new Set(),
+  async connect() {
+    this.port = await navigator.serial.requestPort();
+    await this.port.open({ baudRate: 115200 });
+    this.readLoop();
+  },
+  async readLoop() {
+    const decoder = new TextDecoder();
+    this.reader = this.port.readable.getReader();
+    try {
+      for (;;) {
+        const { value, done } = await this.reader.read();
+        if (done) break;
+        this.buffer += decoder.decode(value);
+        let i;
+        while ((i = this.buffer.indexOf("\n")) >= 0) {
+          const line = this.buffer.slice(0, i).trim();
+          this.buffer = this.buffer.slice(i + 1);
+          if (line) for (const fn of this.listeners) fn(line);
+        }
+      }
+    } catch (e) { log("! serial read error: " + e.message); }
+  },
+  async send(text) {
+    const w = this.port.writable.getWriter();
+    await w.write(new TextEncoder().encode(text));
+    w.releaseLock();
+  },
+  onLine(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn); },
+  async close() {
+    try { if (this.reader) { await this.reader.cancel(); this.reader.releaseLock?.(); } } catch {}
+    try { if (this.port) await this.port.close(); } catch {}
+    this.reader = null;
+  },
+  async reopen(baud) {
+    await this.close();
+    await this.port.open({ baudRate: baud });
+    if (baud === 115200) this.readLoop();
+  },
+};
+
+/* ---------- WebHID HalfKay flashing (A2.3) ----------
+   Spike findings (2026-08-24, on the real unit): opening serial at 9600 then
+   134 baud reboots the app into HalfKay in ~0.3 s (PJRC's own auto mode); the
+   bootloader auto-exits after ~2.6 s if IDLE but persists once programming
+   starts, and a failed pass leaves flash progress behind, so retries converge.
+   Protocol per teensy_loader_cli: 1088-byte reports = 3-byte little-endian
+   offset + 61 bytes pad + 1024 data; offset FF FF FF = reboot into the app. */
+const FLASH_BASE = 0x60000000, BLOCK = 1024;
+
+function parseIntelHex(text) {
+  const mem = new Map(); let upper = 0, min = Infinity, max = 0;
+  for (const raw of text.split(/\r?\n/)) {
+    const l = raw.trim();
+    if (!l.startsWith(":")) continue;
+    const bytes = []; for (let i = 1; i < l.length; i += 2) bytes.push(parseInt(l.substr(i, 2), 16));
+    const [count, ah, al, type] = bytes;
+    if (type === 4) upper = (bytes[4] << 8 | bytes[5]) << 16;
+    else if (type === 0) {
+      const addr = upper + (ah << 8 | al);
+      for (let i = 0; i < count; i++) { mem.set(addr + i, bytes[4 + i]); }
+      min = Math.min(min, addr); max = Math.max(max, addr + count);
+    } else if (type === 1) break;
+  }
+  return { mem, min, max };
+}
+
+async function acquirePort() {
+  // re-acquire the granted port fresh: after re-enumeration old handles go stale
+  const ports = await navigator.serial.getPorts();
+  const p = ports.find(x => (x.getInfo().usbVendorId || 0) === 0x16C0) || ports[0];
+  if (p) serial.port = p;
+  return serial.port;
+}
+
+async function rebootToHalfKay() {
+  // the 9600 -> 134 dance; retried because the device may be mid-re-enumeration
+  await serial.close();
+  for (let i = 0; i < 6; i++) {
+    try {
+      await acquirePort();
+      await serial.port.open({ baudRate: 9600 }); await wait(0.3);
+      await serial.port.close();
+      await serial.port.open({ baudRate: 134 }); await wait(0.3);
+      await serial.port.close();
+      log("· dance ok (try " + (i+1) + ")");
+      return true;
+    } catch (e) { log("! dance try " + (i+1) + ": " + e.message); await wait(0.8); }
+  }
+  return false;
+}
+
+async function grantedHalfKay() {
+  const grant = await navigator.hid.getDevices();
+  const d = grant.find(x => x.vendorId === 0x16C0 && x.productId === 0x0478) || null;
+  if (grant.length && !d) log("· getDevices: " + grant.map(x => x.vendorId.toString(16)+":"+x.productId.toString(16)).join(","));
+  return d;
+}
+
+/* Chrome does not persist WebHID grants for devices without a serial number
+   (HalfKay has none) — verified 2026-08-24: hidGrants empty after a pick. So
+   the pick IS the flash moment: while the popup is open we keep re-entering
+   the bootloader so "Teensy" keeps appearing; the instant the operator picks
+   it we open that very device object and write, before it can slip away.
+   The dancer never fires the reboot step after the pick (that would kill the
+   instance the operator just chose). */
+async function pickHalfKay(det) {
+  det.textContent = "popup open — wait for “Teensy” to APPEAR in the list, then click it INSTANTLY (a freshly-appeared one has the most time left; if in doubt, wait for it to vanish and reappear)";
+  await serial.close(); // release the port and its reader lock — the dance needs to reopen it
+  let picking = true;
+  const dancer = (async () => {
+    while (picking) {
+      try {
+        await acquirePort();
+        if (!picking) break;
+        await serial.port.open({ baudRate: 9600 }); await wait(0.25);
+        await serial.port.close();
+        if (!picking) break; // never reboot after the pick — it would kill the picked instance
+        await serial.port.open({ baudRate: 134 }); await wait(0.25);
+        await serial.port.close();
+        log("· bootloader re-entered");
+      } catch (e) { log("! dance: " + e.message); try { await serial.close(); } catch {} }
+      for (let i = 0; i < 16 && picking; i++) await wait(0.1);
+    }
+  })();
+  let picked = null;
+  try {
+    const res = await navigator.hid.requestDevice({ filters: [{ vendorId: 0x16C0, productId: 0x0478 }] });
+    picked = res[0] || null;
+  } finally { picking = false; }
+  await dancer;
+  return picked;
+}
+
+function withTimeout(promise, ms, what) {
+  return Promise.race([promise, new Promise((_, rej) =>
+    setTimeout(() => rej(new Error(what + " timed out after " + ms / 1000 + " s")), ms))]);
+}
+
+async function halfkayWrite(dev, image, blocks, onProgress) {
+  // Speed is survival: the WORKING Teensy GUI completes its whole flash in
+  // ~2.3 s inside the bootloader window (measured 2026-08-24). Reports are
+  // pipelined in small batches so the OS queue stays full; the device
+  // flow-controls the wire. Block 0 goes alone first (it triggers erase).
+  const t0 = performance.now();
+  const mkReport = off => {
+    const r = new Uint8Array(1088); // 3-byte offset + 61 pad + 1024 data
+    r[0] = off & 255; r[1] = (off >> 8) & 255; r[2] = (off >> 16) & 255;
+    r.set(image.subarray(off, off + BLOCK), 64);
+    return r;
+  };
+  await withTimeout(dev.sendReport(0, mkReport(blocks[0])), 20000, "block 0 (erase)");
+  onProgress(1 / blocks.length);
+  const BATCH = 6;
+  for (let i = 1; i < blocks.length; i += BATCH) {
+    const slice = blocks.slice(i, i + BATCH);
+    await withTimeout(Promise.all(slice.map(off => dev.sendReport(0, mkReport(off)))),
+                      8000, "blocks " + i + "-" + (i + slice.length - 1));
+    onProgress(Math.min(1, (i + slice.length) / blocks.length));
+  }
+  const boot = new Uint8Array(1088); boot[0] = boot[1] = boot[2] = 0xFF;
+  await withTimeout(dev.sendReport(0, boot), 5000, "reboot report");
+  log("· all " + blocks.length + " blocks in " + ((performance.now() - t0) / 1000).toFixed(2) + " s");
+}
+
+function describeHid(dev) {
+  // what Chrome believes this device accepts — it VALIDATES sendReport against this
+  try {
+    return dev.collections.map(c => ({
+      usagePage: c.usagePage.toString(16), usage: c.usage.toString(16),
+      out: (c.outputReports || []).map(r => ({ id: r.reportId,
+        bits: (r.items || []).reduce((a, i) => a + (i.reportSize || 0) * (i.reportCount || 0), 0) })),
+      feat: (c.featureReports || []).map(r => ({ id: r.reportId,
+        bits: (r.items || []).reduce((a, i) => a + (i.reportSize || 0) * (i.reportCount || 0), 0) })),
+    }));
+  } catch (e) { return "introspection failed: " + e.message; }
+}
+
+async function flashViaDevice(dev, image, blocks, det, prog) {
+  if (!dev.opened) await dev.open();
+  log("· HID descriptor per Chrome: " + JSON.stringify(describeHid(dev)));
+  log("· HID open ok, writing " + blocks.length + " blocks");
+  prog.style.display = "block";
+  det.textContent = "writing…";
+  await halfkayWrite(dev, image, blocks, p => prog.value = p);
+  try { await dev.close(); } catch {}
+}
+
+async function flashFirmware() {
+  const btn = $("flashBtn"), det = $("flashDetail"), prog = $("flashProg");
+  btn.disabled = true; $("runBtn").disabled = true;
+  $("flashCard").className = "step running";
+  try {
+    det.textContent = "loading firmware.hex…";
+    const hexResp = await fetch("firmware.hex");
+    if (!hexResp.ok) throw new Error("no firmware bundled with this copy of the page — flashing happens at the factory (run felix_factory.py --serve locally)");
+    const text = await hexResp.text();
+    const { mem, min, max } = parseIntelHex(text);
+    const size = max - FLASH_BASE;
+    const image = new Uint8Array(Math.ceil(size / BLOCK) * BLOCK).fill(0xFF);
+    for (const [addr, b] of mem) image[addr - FLASH_BASE] = b;
+    const blocks = [];
+    for (let off = 0; off < image.length; off += BLOCK) {
+      if (off === 0 || !image.subarray(off, off + BLOCK).every(b => b === 0xFF)) blocks.push(off);
+    }
+    det.textContent = `${(size / 1024).toFixed(0)} kB, ${blocks.length} blocks`;
+
+    // Preferred path: the local helper (started with `felix_factory.py --serve`)
+    // — no pickers, no timing, retries until converged. Measured boundary
+    // 2026-08-24: Chrome/WebHID loses the race against HalfKay's ~2.6 s
+    // soft-entry window on macOS, so the browser path below is a fallback.
+    let helper = null;
+    for (const base of [location.origin, "http://127.0.0.1:8478"]) {
+      try {
+        const r = await fetch(base + "/api/ping", { signal: AbortSignal.timeout(1200) });
+        if (r.ok) { helper = base; break; }
+      } catch {}
+    }
+    if (helper) {
+      det.textContent = "flashing via local helper…";
+      await serial.close(); // the helper needs the port
+      const resp = await fetch(helper + "/api/flash", { method: "POST" });
+      if (resp.status === 409) throw new Error("helper is already flashing — wait for it");
+      const reader = resp.body.getReader(); const dec = new TextDecoder();
+      let buf = "", ok = false;
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value);
+        let i;
+        while ((i = buf.indexOf("\n")) >= 0) {
+          const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+          if (line) { log("· helper: " + line); det.textContent = line; if (line.includes("SUCCESS")) ok = true; }
+        }
+      }
+      if (!ok) throw new Error("helper flash failed — see the serial log");
+    } else {
+    let dev = await grantedHalfKay(); // covers browsers/devices where the grant persists
+    if (dev) {
+      log("· using persisted grant");
+      await rebootToHalfKay();
+      let found = null;
+      for (let i = 0; i < 25 && !found; i++) { await wait(0.1); found = await grantedHalfKay(); }
+      if (!found) throw new Error("bootloader did not reappear");
+      await flashViaDevice(found, image, blocks, det, prog);
+    } else {
+      const picked = await pickHalfKay(det);
+      if (!picked) throw new Error("nothing selected — click Flash to try again");
+      try {
+        await flashViaDevice(picked, image, blocks, det, prog); // the race: open NOW
+      } catch (e) {
+        throw new Error(`the bootloader slipped away before writing (${e.message}) — for reliable flashing start the helper: python3 factory/felix_factory.py --serve`);
+      }
+    }
+    } // end helper/browser fork
+    det.textContent = "flashed — rebooting…";
+
+    // device re-enumerates as the app; reconnect the granted serial port
+    let ok = false;
+    for (let i = 0; i < 30 && !ok; i++) {
+      await wait(0.5);
+      try { await acquirePort(); await serial.reopen(115200); ok = true; } catch {}
+    }
+    if (!ok) throw new Error("serial did not come back — unplug/replug and reconnect");
+    await wait(2.5);
+    const st = await getStatus();
+    if (st) { currentStatus = st; showBadges(st); }
+    const target = (window.__fwTarget || "").trim();
+    const okVer = !target || (st && st.fw === target);
+    det.textContent = st ? `✓ flashed, unit reports ${st.fw}` + (okVer ? "" : ` — WARNING: target was ${target}`) : "flashed, but no status reply";
+    $("flashCard").className = "step " + (st && okVer ? "pass" : "fail");
+    cert.flash = { pass: !!(st && okVer), firmware: st ? st.fw : null, target, operator: operatorName() };
+  } catch (e) {
+    det.textContent = "✗ " + e.message;
+    $("flashCard").className = "step fail";
+    cert.flash = { pass: false, error: e.message };
+    // best effort: put the serial connection back so testing still works
+    try { await acquirePort(); await serial.reopen(115200); log("· serial restored"); } catch {}
+  }
+  btn.disabled = false; $("runBtn").disabled = false;
+}
+
+function expect(regex, timeoutMs, sendText) {
+  return new Promise(resolve => {
+    const off = serial.onLine(line => {
+      const m = line.match(regex);
+      if (m) { off(); clearTimeout(t); resolve(m); }
+    });
+    const t = setTimeout(() => { off(); resolve(null); }, timeoutMs);
+    if (sendText) serial.send(sendText);
+  });
+}
+
+/* Collect telemetry rows (tempo/dominance/rms/dba/gate) for `seconds`. */
+function sampleStream(seconds, onProgress) {
+  return new Promise(resolve => {
+    const rows = []; const cur = {}; const t0 = performance.now();
+    const off = serial.onLine(line => {
+      let m;
+      if ((m = line.match(/Detected tempo: ([\d.]+)/))) cur.tempo = +m[1];
+      if ((m = line.match(/Dominance: ([\d.]+)/))) cur.dom = +m[1];
+      if ((m = line.match(/RMS level average: ([\d.]+)/))) cur.rms = +m[1];
+      if ((m = line.match(/SPL level \(dbA\): ([\d.]+)/))) cur.dba = +m[1];
+      if ((m = line.match(/Gate state: (\w+)/))) {
+        cur.gate = m[1]; cur.t = (performance.now() - t0) / 1000;
+        if (cur.tempo !== undefined) rows.push({ ...cur });
+      }
+    });
+    const iv = setInterval(() => {
+      const el = (performance.now() - t0) / 1000;
+      if (onProgress) onProgress(el / seconds);
+      if (el >= seconds) { clearInterval(iv); off(); resolve(rows); }
+    }, 250);
+  });
+}
+
+async function getStatus() {
+  const m = await expect(/STATUS: fw=(\S+) edition=(\d+) cal=([\d.]+) clean_min=(\d+) firstboot=(\d) sd=(\d) mode=(\w) softoff=(\d)/, 6000, "V");
+  if (!m) return null;
+  return { fw: m[1], edition: +m[2], cal: +m[3], cleanMin: +m[4], firstboot: m[5] === "1", sd: m[6] === "1", mode: m[7], softoff: m[8] === "1" };
+}
+
+function showBadges(st) {
+  $("b-fw").textContent = st.fw;
+  $("b-ed").textContent = st.edition || "unprovisioned";
+  $("b-cal").textContent = st.cal.toFixed(1);
+  $("b-sd").textContent = st.sd ? "ok" : "MISSING";
+  $("b-mode").textContent = { B: "BPM", D: "dB", O: "off" }[st.mode] || st.mode;
+}
+
+/* ---------- reference audio (same math as bench/make_genre_tracks.py) ---------- */
+const SR = 44100;
+function synthTrack(bpm, patternFn, seconds, jitterMs = 0) {
+  const n = Math.floor(seconds * SR);
+  const buf = new Float32Array(n);
+  const beat = 60 / bpm; const barLen = 4 * beat;
+  let seed = 97; const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  const gauss = () => (rnd() + rnd() + rnd() + rnd() - 2) / 2;
+  function place(sample, atS, gain) {
+    const i0 = Math.floor(atS * SR);
+    for (let i = 0; i < sample.length && i0 + i < n; i++) if (i0 + i >= 0) buf[i0 + i] += sample[i] * gain;
+  }
+  function kick() {
+    const len = Math.floor(0.35 * SR); const s = new Float32Array(len); let ph = 0;
+    for (let i = 0; i < len; i++) {
+      const t = i / SR; const f = 60 * (1 + 2.5 * Math.exp(-t * 30));
+      ph += 2 * Math.PI * f / SR;
+      s[i] = Math.sin(ph) * Math.exp(-t * 18) + (rnd() * 2 - 1) * Math.exp(-t * 400) * 0.5;
+    }
+    return s;
+  }
+  function snare() {
+    const len = Math.floor(0.25 * SR); const s = new Float32Array(len);
+    for (let i = 0; i < len; i++) {
+      const t = i / SR;
+      s[i] = (rnd() * 2 - 1) * Math.exp(-t * 25) + Math.sin(2 * Math.PI * 190 * t) * Math.exp(-t * 40) * 0.5;
+    }
+    return s;
+  }
+  function hat(open) {
+    const len = Math.floor((open ? 0.24 : 0.08) * SR); const s = new Float32Array(len); let prev = 0;
+    for (let i = 0; i < len; i++) {
+      const t = i / SR; const nz = (rnd() * 2 - 1) * Math.exp(-t * (open ? 30 : 90));
+      s[i] = nz - prev; prev = nz;
+    }
+    return s;
+  }
+  const kickS = kick(), snareS = snare(), hatS = hat(false), hatO = hat(true);
+  const bank = { k: kickS, s: snareS, h: hatS, H: hatO };
+  const bars = Math.ceil(seconds / barLen);
+  for (let bar = 0; bar < bars; bar++) {
+    for (const [pos, kind, gain] of patternFn(bar)) {
+      let t = bar * barLen + pos * beat;
+      let g = gain;
+      if (jitterMs > 0) { t += gauss() * jitterMs / 1000; g *= 1 + (rnd() * 0.3 - 0.15); }
+      place(bank[kind], t, g);
+    }
+  }
+  let peak = 0; for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(buf[i]));
+  for (let i = 0; i < n; i++) buf[i] *= 0.9 / peak;
+  return buf;
+}
+function beatBar() { // the beat120 pattern: kick quarters, snare 2&4, hats 8ths
+  const ev = [[0,'k',1],[1,'k',.9],[2,'k',1],[3,'k',.9],[1,'s',.8],[3,'s',.8]];
+  for (let i = 0; i < 8; i++) ev.push([i * .5, 'h', .5]);
+  return ev;
+}
+function hiphopBar(bar) {
+  const ev = [[0,'k',1],[0.75,'k',.7],[1,'s',.9],[2.5,'k',.8],[3,'s',.9],[3.75,'k',.5]];
+  for (let i = 0; i < 8; i++) ev.push([i * .5, 'h', i % 2 ? .65 : .5]);
+  if (bar % 4 === 3) ev.push([3.5,'H',.6]);
+  return ev;
+}
+function funkBar() {
+  const ev = [[0,'k',1],[0.625,'k',.6],[1,'s',.9],[1.75,'k',.7],[2.25,'k',.6],[3,'s',.9],[3.5,'k',.5],[1.5,'s',.25],[2.75,'s',.2]];
+  for (let i = 0; i < 16; i++) ev.push([i * .25, 'h', .35 + (i % 4 === 2 ? .3 : 0)]);
+  return ev;
+}
+let audioCtx = null;
+function playTrack(bpm, patternFn, seconds, jitterMs = 0) {
+  if (!audioCtx) audioCtx = new AudioContext();
+  const data = synthTrack(bpm, patternFn, seconds, jitterMs);
+  const buf = audioCtx.createBuffer(1, data.length, SR);
+  buf.copyToChannel(data, 0);
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf; src.connect(audioCtx.destination); src.start();
+  return src;
+}
+
+/* Steady-state lock criterion — identical to felix_factory.judge_lock */
+function judgeLock(rows, expected, minFrames = 20, settleS = 20) {
+  const showing = rows.filter(r => r.gate === "SHOWING" && r.t >= settleS).map(r => r.tempo).sort((a, b) => a - b);
+  if (showing.length < minFrames) return { ok: false, detail: `only ${showing.length} SHOWING frames after settle` };
+  const median = showing[Math.floor(showing.length / 2)];
+  const within5 = showing.filter(t => Math.abs(t - expected) <= 5).length / showing.length;
+  const ok = Math.abs(median - expected) <= 2 && within5 >= 0.9;
+  return { ok, detail: `median ${median.toFixed(1)} vs ${expected}, ${(within5 * 100).toFixed(0)}% within ±5, ${showing.length} frames`,
+           dist: { frames: showing.length, median: +median.toFixed(1), within5_pct: +(within5 * 100).toFixed(1) } };
+}
+
+/* ---------- steps engine ---------- */
+const cert = { tool: "felix-factory-web v1", steps: {}, result: "PENDING" };
+let currentStatus = null;
+
+const STEPS = [
+  { id: "status", title: "Read unit status", run: async (s) => {
+      currentStatus = await getStatus();
+      if (!currentStatus) return fail(s, "no STATUS reply — is this a Felix?");
+      showBadges(currentStatus);
+      cert.firmware = currentStatus.fw;
+      if (!currentStatus.sd) return fail(s, "SD card missing or logging disabled");
+      if (currentStatus.mode !== "B") return fail(s, "flip the rear toggle to BPM and rerun");
+      pass(s, `fw ${currentStatus.fw}, cal ${currentStatus.cal.toFixed(1)}`);
+    } },
+  { id: "provision", title: "Set edition number", input: { placeholder: "unit #", min: 1, max: 9999 }, run: async (s) => {
+      const v = parseInt(s.inputEl.value, 10);
+      if (!v) { skip(s, "no number entered — kept existing"); return; }
+      const m = await expect(/EDITION SET: unit #(\d+)/, 5000, `E${v}\n`);
+      if (!m || +m[1] !== v) return fail(s, "edition write failed");
+      cert.edition = v; currentStatus.edition = v; showBadges(currentStatus);
+      pass(s, `unit #${v}, first-boot moment armed`);
+    } },
+  { id: "time", title: "Sync the clock", run: async (s) => {
+      const local = Math.floor(Date.now() / 1000) - new Date().getTimezoneOffset() * 60;
+      const m = await expect(/TIME SET: (\S+)/, 5000, `T${local}\n`);
+      if (!m) return fail(s, "no TIME SET reply");
+      pass(s, m[1]);
+    } },
+  { id: "quiet", title: "Quiet room check", run: async (s) => {
+      note(s, "listening 8 s — keep the room silent…");
+      const rows = await sampleStream(8, p => prog(s, p));
+      const rms = rows.map(r => r.rms).filter(x => x !== undefined);
+      const gates = new Set(rows.map(r => r.gate));
+      const ok = rms.length && Math.max(...rms) < 0.004 && [...gates].every(g => g === "THINKING");
+      if (!ok) return fail(s, rms.length ? `room not quiet (rms ${Math.max(...rms).toFixed(4)}, gates ${[...gates]})` : "no telemetry");
+      pass(s, `rms max ${Math.max(...rms).toFixed(4)}`);
+    } },
+  { id: "bpm", title: "120 BPM lock", run: async (s) => {
+      note(s, "playing the reference beat 45 s — turn the volume to ~60%…");
+      const src = playTrack(120, beatBar, 45);
+      const rows = await sampleStream(45, p => prog(s, p));
+      src.stop();
+      const j = judgeLock(rows, 120);
+      cert.bpm_distribution = j.dist;
+      if (!j.ok) return fail(s, j.detail);
+      pass(s, j.detail);
+      await wait(20); //let the gate fall back before the next step (detail stays)
+    } },
+  { id: "genre97", title: "97 BPM hip hop (ghost check)", optional: "optGenre", run: async (s) => {
+      const src = playTrack(97, hiphopBar, 50);
+      const rows = await sampleStream(50, p => prog(s, p));
+      src.stop();
+      const j = judgeLock(rows, 97, 15);
+      cert.genre97_distribution = j.dist;
+      if (!j.ok) return fail(s, j.detail);
+      pass(s, j.detail); await wait(20);
+    } },
+  { id: "genre111", title: "111 BPM human funk", optional: "optGenre", run: async (s) => {
+      const src = playTrack(111, funkBar, 50, 12);
+      const rows = await sampleStream(50, p => prog(s, p));
+      src.stop();
+      const j = judgeLock(rows, 111, 15);
+      cert.genre111_distribution = j.dist;
+      if (!j.ok) return fail(s, j.detail);
+      pass(s, j.detail); await wait(20);
+    } },
+  { id: "cleaning", title: "Cathode cleaning start + abort", optional: "optClean", run: async (s) => {
+      note(s, "forcing a session — needs silence to start…");
+      const started = await expect(/CLEAN: session start/, 90000, "C");
+      if (!started) return fail(s, "session never started (room not quiet?)");
+      note(s, "session running — playing music to test the abort…");
+      const src = playTrack(120, beatBar, 15);
+      const aborted = await expect(/CLEAN: session aborted/, 30000);
+      src.stop();
+      if (!aborted) return fail(s, "did not abort on music");
+      pass(s, "starts in silence, aborts on music, progress kept");
+      await wait(20);
+    } },
+  { id: "calibrate", title: "dBA calibration", input: { placeholder: "ref dBA", min: 40, max: 120, step: 0.1 }, run: async (s) => {
+      const ref = parseFloat(s.inputEl.value);
+      if (!ref) { skip(s, "no reference entered — factory default kept"); return; }
+      note(s, "flip the rear toggle to dB…");
+      let st; const t0 = Date.now();
+      do { await wait(2); st = await getStatus(); } while (st && st.mode !== "D" && Date.now() - t0 < 60000);
+      if (!st || st.mode !== "D") return fail(s, "toggle never reached dB mode");
+      note(s, "reading the meter 6 s — hold the calibrator / reference source steady…");
+      const rows = await sampleStream(6, p => prog(s, p));
+      const dbas = rows.map(r => r.dba).filter(x => x !== undefined);
+      if (!dbas.length) return fail(s, "no dBA readings");
+      const measured = dbas.reduce((a, b) => a + b) / dbas.length;
+      const newOffset = st.cal + (ref - measured);
+      const m = await expect(/CAL SET: dBA offset ([\d.]+)/, 5000, `K${newOffset.toFixed(1)}\n`);
+      if (!m) return fail(s, "calibration write failed");
+      cert.calibration = { measured: +measured.toFixed(1), reference: ref, offset: +m[1] };
+      currentStatus.cal = +m[1]; showBadges(currentStatus);
+      note(s, "flip the toggle back to BPM…");
+      const t1 = Date.now();
+      do { await wait(2); st = await getStatus(); } while (st && st.mode !== "B" && Date.now() - t1 < 60000);
+      if (!st || st.mode !== "B") return fail(s, "toggle never returned to BPM");
+      pass(s, `measured ${measured.toFixed(1)}, reference ${ref}, offset → ${m[1]}`);
+    } },
+  { id: "reset", title: "Factory reset (as-shipped)", run: async (s) => {
+      const m = await expect(/FACTORY RESET: as-shipped/, 5000, "R");
+      if (!m) return fail(s, "no reset confirmation");
+      pass(s, "schedule re-armed, first-boot moment armed, edition + calibration kept");
+    } },
+];
+
+/* step UI helpers */
+function el(html) { const d = document.createElement("div"); d.innerHTML = html; return d.firstElementChild; }
+function fail(s, msg) { s.state = "fail"; s.detailEl.textContent = msg; s.box.className = "step fail"; throw new Error(msg); }
+function pass(s, msg) { s.state = "pass"; s.detailEl.textContent = msg; s.box.className = "step pass"; }
+function skip(s, msg) { s.state = "skip"; s.detailEl.textContent = msg; s.box.className = "step"; }
+function note(s, msg) { s.detailEl.textContent = msg; }
+function prog(s, p) { s.progEl.value = Math.min(1, p); s.progEl.style.display = "block"; }
+const wait = sec => new Promise(r => setTimeout(r, sec * 1000));
+
+function buildSteps() {
+  const host = $("steps");
+  STEPS.forEach((s, i) => {
+    s.box = el(`<div class="step"><div class="step-head"><span class="num">${i + 2}</span><span class="title">${s.title}</span><span class="controls"></span></div><div class="detail"></div><progress value="0" max="1" style="display:none;margin-top:.5rem"></progress></div>`);
+    s.detailEl = s.box.querySelector(".detail");
+    s.progEl = s.box.querySelector("progress");
+    const controls = s.box.querySelector(".controls");
+    if (s.input) {
+      s.inputEl = el(`<input type="number" placeholder="${s.input.placeholder}" min="${s.input.min}" max="${s.input.max}" step="${s.input.step || 1}">`);
+      controls.appendChild(s.inputEl);
+    }
+    s.runBtn = el(`<button title="run this step alone">▶</button>`);
+    s.runBtn.onclick = () => runOne(s);
+    controls.appendChild(s.runBtn);
+    host.appendChild(s.box);
+  });
+}
+
+let running = false;
+async function execStep(s) {
+  s.box.className = "step running"; s.progEl.style.display = "none";
+  s.box.scrollIntoView({ behavior: "smooth", block: "center" });
+  try {
+    await s.run(s);
+    cert.steps[s.id] = { pass: s.state !== "fail", detail: s.detailEl.textContent };
+    return true;
+  } catch (e) {
+    cert.steps[s.id] = { pass: false, detail: e.message };
+    return false;
+  }
+}
+
+async function runOne(s) {
+  if (running || !serial.reader) return;
+  running = true;
+  await execStep(s);
+  running = false;
+}
+
+async function runAll() {
+  if (running) return;
+  running = true;
+  $("runBtn").disabled = true;
+  cert.date = new Date().toISOString().slice(0, 19);
+  cert.operator = operatorName();
+  let failed = false;
+  for (const s of STEPS) {
+    if (s.optional && !$(s.optional).checked) { skip(s, "skipped"); cert.steps[s.id] = { pass: true, detail: "skipped" }; continue; }
+    if (!(await execStep(s))) { failed = true; break; }
+  }
+  cert.result = failed ? "FAIL" : "PASS";
+  const v = $("verdict");
+  v.className = failed ? "fail" : "pass";
+  const unitNo = cert.edition ?? (currentStatus && currentStatus.edition ? currentStatus.edition : "(unprovisioned)");
+  v.textContent = (failed ? "✗ FAIL — do not ship this unit" : `✓ PASS — unit ${unitNo} ready to box`) +
+                  `  ·  ${cert.operator}, ${cert.date.replace("T", " ")}`;
+  $("certBtn").disabled = false;
+  saveCert();
+  $("runBtn").disabled = false; $("runBtn").textContent = "Run again";
+  running = false;
+}
+
+function operatorName() {
+  let op = "";
+  try { op = localStorage.getItem("felix-operator") || ""; } catch {}
+  if (!op) {
+    op = (prompt("Operator name or initials (stamped into every certificate):") || "unknown").trim() || "unknown";
+    try { localStorage.setItem("felix-operator", op); } catch {}
+  }
+  $("b-op").textContent = op;
+  return op;
+}
+
+/* ---------- certificates ---------- */
+function db() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open("felix-factory", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("certs", { autoIncrement: true });
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+}
+async function saveCert() {
+  try {
+    const d = await db();
+    d.transaction("certs", "readwrite").objectStore("certs").add(JSON.parse(JSON.stringify(cert)));
+    renderHistory();
+  } catch (e) { log("! cert store: " + e.message); }
+}
+async function allCerts() {
+  try {
+    const d = await db();
+    return await new Promise(res => {
+      const q = d.transaction("certs").objectStore("certs").getAll();
+      q.onsuccess = () => res(q.result); q.onerror = () => res([]);
+    });
+  } catch { return []; }
+}
+async function renderHistory() {
+  const rows = await allCerts();
+  const tb = $("histTable").querySelector("tbody");
+  tb.innerHTML = rows.slice(-40).reverse().map(c =>
+    `<tr><td>${c.date ?? ""}</td><td>${c.edition ?? "—"}</td><td>${c.firmware ?? ""}</td><td>${c.result}</td></tr>`).join("");
+}
+function download(name, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name; a.click();
+}
+$("certBtn").onclick = () =>
+  download(`unit-${cert.edition ?? "unprovisioned"}-${cert.date?.replace(/[:T]/g, "-")}.json`, JSON.stringify(cert, null, 2), "application/json");
+$("csvBtn").onclick = async () => {
+  const rows = await allCerts();
+  const csv = ["date,edition,firmware,result,detail"].concat(rows.map(c =>
+    [c.date, c.edition ?? "", c.firmware ?? "", c.result,
+     Object.entries(c.steps || {}).filter(([, v]) => !v.pass).map(([k, v]) => `${k}: ${v.detail}`).join("; ")]
+      .map(x => `"${String(x ?? "").replace(/"/g, '""')}"`).join(","))).join("\n");
+  download("felix-units.csv", csv, "text/csv");
+};
+
+/* ---------- boot ---------- */
+if (!("serial" in navigator)) {
+  $("unsupported").style.display = "block";
+  $("connectBtn").disabled = true;
+}
+buildSteps();
+renderHistory();
+serial.listeners.add(l => { if (!/Running for time|Processing took|remainder|Tempo display|RMS level|Detected tempo|Onsets|Dominance|Gate state|HistPeaks|SPL level/.test(l)) log(l); });
+$("connectBtn").onclick = async () => {
+  try {
+    await serial.connect();
+    log("· connected");
+    $("connectBtn").textContent = "Connected ✓"; $("connectBtn").disabled = true;
+    $("disconnectBtn").style.display = "";
+    $("runBtn").disabled = false;
+    $("flashBtn").disabled = false;
+    const st = await getStatus();
+    if (st) {
+      currentStatus = st; showBadges(st);
+      const prov = STEPS.find(x => x.id === "provision");
+      if (prov && st.edition) prov.inputEl.placeholder = "#" + st.edition;
+    }
+  } catch (e) { log("! " + e.message); }
+};
+$("disconnectBtn").onclick = async () => {
+  await serial.close();
+  $("connectBtn").textContent = "1 · Connect unit"; $("connectBtn").disabled = false;
+  $("disconnectBtn").style.display = "none";
+  $("runBtn").disabled = true; $("flashBtn").disabled = true;
+  log("· disconnected");
+};
+$("runBtn").onclick = runAll;
+$("flashBtn").onclick = flashFirmware;
+fetch("firmware.version").then(r => r.ok ? r.text() : "").then(v => {
+  window.__fwTarget = v.trim();
+  if (v) $("flashTarget").textContent = "→ " + v.trim();
+}).catch(() => {});
+(async () => {
+  let ok = false;
+  for (const base of [location.origin, "http://127.0.0.1:8478"]) {
+    try { if ((await fetch(base + "/api/ping", { signal: AbortSignal.timeout(1200) })).ok) { ok = true; break; } } catch {}
+  }
+  $("b-helper").textContent = ok ? "helper ✓" : "browser only";
+})();
+try { const op = localStorage.getItem("felix-operator"); if (op) $("b-op").textContent = op; } catch {}
+</script>
+</body>
+</html>
