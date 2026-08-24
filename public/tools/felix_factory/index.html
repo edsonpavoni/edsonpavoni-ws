@@ -364,7 +364,7 @@ async function flashFirmware() {
     const hexResp = await fetch("firmware.hex").catch(() => null);
     if (hexResp && hexResp.ok) text = await hexResp.text();
     else if (gateKey) {
-      const er = await fetch("firmware.hex.enc").catch(() => null);
+      const er = await fetch("firmware.hex.enc", { cache: "no-store" }).catch(() => null);
       if (er && er.ok) {
         const e = await er.json();
         text = new TextDecoder().decode(await gcmDecrypt(gateKey, e.iv, e.data));
@@ -447,9 +447,10 @@ async function flashFirmware() {
     $("flashCard").className = "step " + (st && okVer ? "pass" : "fail");
     cert.flash = { pass: !!(st && okVer), firmware: st ? st.fw : null, target, operator: operatorName() };
   } catch (e) {
-    det.textContent = "✗ " + e.message;
+    const msg = e.message || e.name || "decrypt or transfer failed — hard-reload the page (Cmd+Shift+R) and try again";
+    det.textContent = "✗ " + msg;
     $("flashCard").className = "step fail";
-    cert.flash = { pass: false, error: e.message };
+    cert.flash = { pass: false, error: msg };
     // best effort: put the serial connection back so testing still works
     try { await acquirePort(); await serial.reopen(115200); log("· serial restored"); } catch {}
   }
@@ -1027,7 +1028,7 @@ $("disconnectBtn").onclick = async () => {
 };
 $("runBtn").onclick = runAll;
 $("flashBtn").onclick = flashFirmware;
-fetch("firmware.version").then(r => r.ok ? r.text() : "").then(v => {
+fetch("firmware.version", { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   window.__fwTarget = v.trim();
   if (v) $("flashTarget").textContent = "→ " + v.trim();
 }).catch(() => {});
