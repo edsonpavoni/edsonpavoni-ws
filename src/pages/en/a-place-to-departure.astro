@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="A Place to Departure - Edson Pavoni">
@@ -28,12 +27,9 @@ import "plyr/dist/plyr.css";
                 </div>
 
                 <div class="videowrapper | margin-top-300">
-                    <div class="plyr | video-scale" id="player">
-                        <iframe
-                            src="https://www.youtube.com/embed/9qk6AZvQDyg?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-                            allowfullscreen
-                            allowtransparency
-                            allow="autoplay"></iframe>
+                    <div class="yt-facade video-scale" data-yt="9qk6AZvQDyg" data-title="A Place to Departure, video">
+                    	<img src="/assets/yt/9qk6AZvQDyg.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+                    	<button type="button" class="yt-facade__play" aria-label="Play: A Place to Departure, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
                     </div>
                 </div>
                 <div class="fs-caption text-caption padding-block-caption">
@@ -55,13 +51,13 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/a-place/01.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="A Place to Departure in China, 2014. Images by Pedrinho Fonseca &amp; Jorge Teivelis Neto"
+                        width="700"
+                        height="467"
+                        decoding="async"/>
                 </div>
                 <div>
-                    <video
-                        autoplay
+                    <video data-autoplay preload="none"
                         muted
                         playsinline
                         loop
@@ -94,9 +90,11 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/a-place/02.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="A Place to Departure in China, 2014. Images by Pedrinho Fonseca"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="fs-caption text-caption padding-block-caption">
@@ -115,9 +113,11 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/a-place/03.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="A Place to Departure in China, 2014. Photo by Pedrinho Fonseca"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="fs-caption text-caption padding-block-caption">
@@ -147,9 +147,11 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/a-place/04.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Artist Ai Weiwei visits the work A Place to Departure in China, 2014. Photo by Pedrinho Fonseca"
+                        width="700"
+                        height="388"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="fs-caption text-caption padding-block-caption">
@@ -175,15 +177,19 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/a-place/05.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="A Place to Departure photographed by Edson Pavoni in Dubai, 2015 (1 of 2)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                     <img
                         class="margin-top-200"
                         src="/assets/pages/a-place/06.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="A Place to Departure photographed by Edson Pavoni in Dubai, 2015 (2 of 2)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
                 <div class="fs-caption text-caption padding-block-caption">
                     <span class="fstyle-label">A Place to Departure</span> photographed by Edson Pavoni in Dubai, 2015.
@@ -197,9 +203,11 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/a-place/07.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="A Place to Departure photographed by Edson Pavoni in Dubai, 2015"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
                 <div class="fs-caption text-caption padding-block-caption">
                     <span class="fstyle-label">A Place to Departure</span> photographed by Edson Pavoni in Dubai, 2015.

@@ -1,157 +1,200 @@
 ---
 import { GoogleAnalytics } from 'astro-google-analytics';
 export interface Props {
-	title: string;
+  title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const SITE = 'https://edsonpavoni.art';
+const FONTS = 'https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,700;1,7..72,400&family=Rufina:wght@700&display=swap';
+const { title, description = 'Will technology drive us apart or bring us closer together?' } = Astro.props;
+
+// Language from the first path segment. Screen readers and search engines read this.
+const path = Astro.url.pathname;
+const seg = path.split('/')[1] || 'en';
+const LANGS: Record<string, { html: string; hreflang: string; og: string }> = {
+  en: { html: 'en',    hreflang: 'en',    og: 'en_US' },
+  br: { html: 'pt-BR', hreflang: 'pt-BR', og: 'pt_BR' },
+  es: { html: 'es',    hreflang: 'es',    og: 'es_ES' },
+  cn: { html: 'zh-CN', hreflang: 'zh-CN', og: 'zh_CN' },
+};
+const lang = LANGS[seg] ?? LANGS.en;
+
+// Canonical: Firebase redirects /en/page to /en/page/, so the slashed form is the canonical one.
+const canonicalPath = path.endsWith('/') ? path : path + '/';
+const canonical = SITE + canonicalPath;
+
+// hreflang alternates: only for pages that exist in the other languages.
+const pageFiles = Object.keys(import.meta.glob('../pages/**/*.astro'));
+const routes = new Set(
+  pageFiles.map((f) => f.replace('../pages', '').replace(/\/index\.astro$/, '/').replace(/\.astro$/, '/'))
+);
+// Slugs that differ between languages.
+const SLUG_ALIASES: Record<string, Record<string, string>> = {
+  'text-anaclaudia': { br: 'texto-anaclaudia' },
+  'texto-anaclaudia': { en: 'text-anaclaudia' },
+  'text-carollina': { br: 'texto-carollina' },
+  'texto-carollina': { en: 'text-carollina' },
+  'whatwecannot': { br: 'oquenaopodemos' },
+  'oquenaopodemos': { en: 'whatwecannot' },
+};
+const slug = canonicalPath.replace(/^\/[^/]+\//, '').replace(/\/$/, '');
+const alternates = Object.entries(LANGS)
+  .map(([code, l]) => {
+    const s = SLUG_ALIASES[slug]?.[code] ?? slug;
+    const r = `/${code}/` + (s ? s + '/' : '');
+    return routes.has(r) ? { hreflang: l.hreflang, href: SITE + r, code } : null;
+  })
+  .filter(Boolean) as { hreflang: string; href: string; code: string }[];
+const xDefault = alternates.find((a) => a.code === 'en') ?? alternates[0];
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang={lang.html}>
 
 <head>
   <!-- Google Analytics -->
   <GoogleAnalytics id="G-39CDTWZLJ4" />
 
   <meta charset="UTF-8" />
-  <!-- OG -->
-  <meta property="og:site_name" content="Edson Pavoni">
-  <meta property="og:description" content="Will technology drive us apart or bring us closer together?" />
-  <meta property="og:url" content="https://edsonpavoni.art/" />
-  <meta property="og:image" content="/og-image.jpg" />
-  <meta property="og:type" content="website" />
-
-  <link rel="icon" href="https://edsonpavoni.art/favicon.svg" type="image/svg+xml">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
-  
-  <!-- preventing flash of unstyled content FOUC -->
-  <style type="text/css">
-    .hidden {display:none;}
-  </style>
-  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
-  <script type="text/javascript">
-    $('html').addClass('hidden');
-    $(document).ready(function() {
-      $('html').show();
-     });  
-   </script>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+  {xDefault && <link rel="alternate" hreflang="x-default" href={xDefault.href} />}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,700;1,7..72,400&family=Rufina:wght@700&display=swap"
-      rel="stylesheet">
-    </head>
+  <!-- Pinterest domain claim, added 2026-09-18 -->
+  <meta name="p:domain_verify" content="67f892539b404ca1d67775aaf8beab6a"/>
+
+  <!-- Open Graph / link previews -->
+  <meta property="og:site_name" content="Edson Pavoni" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={SITE + '/og-image.jpg'} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content={lang.og} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={SITE + '/og-image.jpg'} />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Fonts load without blocking the first paint; display=swap shows text in the fallback face meanwhile -->
+  <link rel="preload" as="style" href={FONTS} />
+  <link rel="stylesheet" href={FONTS} media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href={FONTS} /></noscript>
+</head>
 
 <body>
   <header>
     <div class="container">
-      <nav>
-          <ul class="top-navigation flex">
-            <li>
-              <button class="language-nav-btn img-btns" aria-controls="lang-nav">
-                  <img class="lang-icon-menu" src="/assets/_language.svg">
-              </button>
-            <li>
-              <button class="primary-nav-btn img-btns" aria-controls="pri-nav">
-                <img class="icon-lang" src="/assets/_menu.svg">
-              </button>
-          </ul>
+      <nav aria-label="Site">
+        <ul class="top-navigation flex">
+          <li>
+            <button class="language-nav-btn img-btns" aria-controls="lang-nav" aria-expanded="false" aria-label="Change language">
+              <img class="lang-icon-menu" src="/assets/_language.svg" alt="" width="24" height="24" />
+            </button>
+          </li>
+          <li>
+            <button class="primary-nav-btn img-btns" aria-controls="pri-nav" aria-expanded="false" aria-label="Open menu">
+              <img class="icon-lang" src="/assets/_menu.svg" alt="" width="24" height="24" />
+            </button>
+          </li>
+        </ul>
       </nav>
     </div>
 
-    
-      <nav>
-        <div class="primary-nav" data-visible="false">
-          <div class="container">
-          <button class="close-menu img-btns top-navigation flex">
-            <img class="menu-icon-close" src="/assets/_close.svg">
+    <nav aria-label="Menu">
+      <div class="primary-nav" id="pri-nav" data-visible="false">
+        <div class="container">
+          <button class="close-menu img-btns top-navigation flex" aria-label="Close menu">
+            <img class="menu-icon-close" src="/assets/_close.svg" alt="" width="24" height="24" />
           </button>
         </div>
-            <div class="menu-wrapper">
-              
-              <div class="menu-navigation-en">
-                <a href="/en/">works</a> <br>
-                <a href="/en/about">about</a> <br>
-                <a href="http://eepurl.com/irTtbU" target="_blank">newsletter</a> <br>
-                <a href="/en/getintouch">contact</a>
-              </div>
+        <div class="menu-wrapper">
 
-              <div class="menu-navigation-br">
-                <a href="/br/">trabalhos</a> <br>
-                <a href="/br/about">sobre</a> <br>
-                <a href="http://eepurl.com/irTtbU" target="_blank">newsletter</a> <br>
-                <a href="/br/getintouch">contato</a>
-              </div>
+          <div class="menu-navigation-en">
+            <a href="/en/">works</a> <br>
+            <a href="/en/about">about</a> <br>
+            <a href="https://eepurl.com/irTtbU" target="_blank" rel="noopener noreferrer">newsletter</a> <br>
+            <a href="/en/getintouch">contact</a>
+          </div>
 
-              <div class="menu-navigation-es">
-                <a href="/es/">obras</a> <br>
-                <a href="/es/about">acerca</a> <br>
-                <a href="http://eepurl.com/irTtbU" target="_blank">newsletter</a> <br>
-                <a href="/es/getintouch">contacto</a>
-              </div>
+          <div class="menu-navigation-br">
+            <a href="/br/">trabalhos</a> <br>
+            <a href="/br/about">sobre</a> <br>
+            <a href="https://eepurl.com/irTtbU" target="_blank" rel="noopener noreferrer">newsletter</a> <br>
+            <a href="/br/getintouch">contato</a>
+          </div>
 
-              <div class="menu-navigation-cn">
-                <a href="/cn/">艺术品</a> <br>
-                <a href="/cn/about">关于</a> <br>
-                <a href="http://eepurl.com/irTtbU" target="_blank">通讯</a> <br>
-                <a href="/cn/getintouch">接触</a>
-              </div>
+          <div class="menu-navigation-es">
+            <a href="/es/">obras</a> <br>
+            <a href="/es/about">acerca</a> <br>
+            <a href="https://eepurl.com/irTtbU" target="_blank" rel="noopener noreferrer">newsletter</a> <br>
+            <a href="/es/getintouch">contacto</a>
+          </div>
 
-            </div>
+          <div class="menu-navigation-cn">
+            <a href="/cn/">艺术品</a> <br>
+            <a href="/cn/about">关于</a> <br>
+            <a href="https://eepurl.com/irTtbU" target="_blank" rel="noopener noreferrer">通讯</a> <br>
+            <a href="/cn/getintouch">接触</a>
+          </div>
+
         </div>
-      </nav>
-    </div>
-
-      <nav>
-        <div class="language-nav f-style-negative" data-visible="false">
-          <div class="container">
-            <button class="close-lang img-btns top-navigation flex">
-              <img class="lang-icon-close" src="/assets/_closeNegative.svg">
-            </button>
-          </div>
-              <div class="menu-wrapper f-style-negative">
-                <div class="lang-navigation-en">
-                  english <br>
-                  <a href="/br">brasileiro</a> <br>
-                  <a href="/es">español</a> <br>
-                  <a href="/cn">中国人</a> <br>
-                </div>
-
-                <div class="lang-navigation-br">
-                  <a href="/en">english</a> <br>
-                  brasileiro<br>
-                  <a href="/es">español</a> <br>
-                  <a href="/cn">中国人</a> <br>
-                </div>
-
-                <div class="lang-navigation-es">
-                  <a href="/en">english</a> <br>
-                  <a href="/br">brasileiro</a> <br>
-                  español<br>
-                  <a href="/cn">中国人</a> <br>
-                </div>
-
-                <div class="lang-navigation-cn">
-                  <a href="/en">english</a> <br>
-                  <a href="/br">brasileiro</a> <br>
-                  <a href="/es">español</a> <br>
-                  中国人<br>
-                </div>
-
-              </div>
-          </div>
-        </nav>
       </div>
-      
-    </div>
+    </nav>
+
+    <nav aria-label="Language">
+      <div class="language-nav f-style-negative" id="lang-nav" data-visible="false">
+        <div class="container">
+          <button class="close-lang img-btns top-navigation flex" aria-label="Close language menu">
+            <img class="lang-icon-close" src="/assets/_closeNegative.svg" alt="" width="24" height="24" />
+          </button>
+        </div>
+        <div class="menu-wrapper f-style-negative">
+          <div class="lang-navigation-en">
+            english <br>
+            <a href="/br" lang="pt-BR">brasileiro</a> <br>
+            <a href="/es" lang="es">español</a> <br>
+            <a href="/cn" lang="zh-CN">中国人</a> <br>
+          </div>
+
+          <div class="lang-navigation-br">
+            <a href="/en" lang="en">english</a> <br>
+            brasileiro<br>
+            <a href="/es" lang="es">español</a> <br>
+            <a href="/cn" lang="zh-CN">中国人</a> <br>
+          </div>
+
+          <div class="lang-navigation-es">
+            <a href="/en" lang="en">english</a> <br>
+            <a href="/br" lang="pt-BR">brasileiro</a> <br>
+            español<br>
+            <a href="/cn" lang="zh-CN">中国人</a> <br>
+          </div>
+
+          <div class="lang-navigation-cn">
+            <a href="/en" lang="en">english</a> <br>
+            <a href="/br" lang="pt-BR">brasileiro</a> <br>
+            <a href="/es" lang="es">español</a> <br>
+            中国人<br>
+          </div>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <slot></slot>
 
-  <script> import "../scripts/main.js"; </script>  
+  <script> import "../scripts/main.js"; </script>
 </body>
 
 </html>

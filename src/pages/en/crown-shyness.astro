@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="Crown Shyness - Edson Pavoni">
@@ -32,12 +31,9 @@ import "plyr/dist/plyr.css";
                 </div>
 
                 <div class="videowrapper | margin-top-300">
-                    <div class="plyr | video-scale" id="player">
-                        <iframe
-                            src="https://www.youtube.com/embed/oQosF_UP0u8?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-                            allowfullscreen
-                            allowtransparency
-                            allow="autoplay"></iframe>
+                    <div class="yt-facade video-scale" data-yt="oQosF_UP0u8" data-title="Crown Shyness, video">
+                    	<img src="/assets/yt/oQosF_UP0u8.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+                    	<button type="button" class="yt-facade__play" aria-label="Play: Crown Shyness, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
                     </div>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Crown Shyness</span> video introduction,
@@ -64,8 +60,7 @@ import "plyr/dist/plyr.css";
                     ourselves.
                 </div>
 
-                <video
-                    autoplay
+                <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop
@@ -94,8 +89,7 @@ import "plyr/dist/plyr.css";
                     Klabin's initiatives, perhaps at first counter-intuitively, have proven how technology can have significant impacts in nature’s conservation. It was by examining this positive relationship between Nature and Technology that our proposal was founded.
                 </div>
 
-                <video
-                    autoplay
+                <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop
@@ -122,30 +116,37 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/crown-shyness/03.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (1 of 4)"
+                        width="700"
+                        height="467"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/crown-shyness/04.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (2 of 4)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/crown-shyness/05.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (3 of 4)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/crown-shyness/06.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (4 of 4)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <div class="fs-caption text-caption padding-block-caption">
                         Making of process of building the <span class="fstyle-label">Crown Shyness </span>installation.
@@ -166,21 +167,27 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/crown-shyness/07.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (1 of 3)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                     <img
                         class="margin-top-200"
                         src="/assets/pages/crown-shyness/08.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (2 of 3)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                     <img
                         class="margin-top-200"
                         src="/assets/pages/crown-shyness/09.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Making of process of building the Crown Shyness installation. Photo by Clara Marques (3 of 3)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         Making of process of building the <span class="fstyle-label">Crown Shyness </span>installation.
                         <br /> Photo by Clara Marques

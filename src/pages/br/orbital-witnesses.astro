@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 
 // Testemunhas Orbitais — versão PT-BR da página (espelha en/orbital-witnesses.astro).
 // Decisão (2026-06-23): os poemas GRAVADOS permanecem na língua em que estão na peça
@@ -100,8 +99,7 @@ const witnesses = [
                 </div>
 
                 <!-- VÍDEO PRINCIPAL — primeira imagem (o verso poético fica acima). Loop mudo em autoplay. -->
-                <video
-                    autoplay
+                <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop

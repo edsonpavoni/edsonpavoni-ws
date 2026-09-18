@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="Sacred in Flux - Edson Pavoni">
@@ -32,12 +31,9 @@ import "plyr/dist/plyr.css";
                 </div>
 
                 <div class="videowrapper | margin-top-300">
-                    <div class="plyr | video-scale" id="player">
-                        <iframe
-                            src="https://www.youtube.com/embed/ZLJRrW3iuRs?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-                            allowfullscreen
-                            allowtransparency
-                            allow="autoplay"></iframe>
+                    <div class="yt-facade video-scale" data-yt="ZLJRrW3iuRs" data-title="Sacred in Flux, video">
+                    	<img src="/assets/yt/ZLJRrW3iuRs.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+                    	<button type="button" class="yt-facade__play" aria-label="Play: Sacred in Flux, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
                     </div>
                 </div>
                 <div class="fs-caption text-caption padding-block-caption">
@@ -62,9 +58,10 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-300">
                     <img
                         src="/assets/pages/sacred-in-flux/01.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Sagrado em Fluxo exposto em São Paulo, Brasil Foto por Filipe Berndt"
+                        width="700"
+                        height="429"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Sagrado em Fluxo</span> exposto em São Paulo, Brasil
                         <br />Foto por Filipe Berndt.
@@ -81,8 +78,7 @@ import "plyr/dist/plyr.css";
 
                 </div>
 
-                <video
-                    autoplay
+                <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop
@@ -124,8 +120,7 @@ import "plyr/dist/plyr.css";
                     “sagrado”, por exemplo, eles conseguiram dialogar com a máquina usando o vocabulário que ela mesma já conhecia.
                 </div>
 
-                <video
-                    autoplay
+                <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop
@@ -166,33 +161,41 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-300">
                     <img
                         src="/assets/pages/sacred-in-flux/03.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Sagrado em Fluxo em exposição em São Paulo, Brasil. Foto por Filipe Berndt (1 of 4)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="margin-top-200">
                     <img
                         src="/assets/pages/sacred-in-flux/04.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Sagrado em Fluxo em exposição em São Paulo, Brasil. Foto por Filipe Berndt (2 of 4)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="margin-top-200">
                     <img
                         src="/assets/pages/sacred-in-flux/05.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Sagrado em Fluxo em exposição em São Paulo, Brasil. Foto por Filipe Berndt (3 of 4)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="margin-top-200">
                     <img
                         src="/assets/pages/sacred-in-flux/06.jpg"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Sagrado em Fluxo em exposição em São Paulo, Brasil. Foto por Filipe Berndt (4 of 4)"
+                        width="700"
+                        height="438"
+                        loading="lazy"
+                        decoding="async"/>
                 </div>
 
                 <div class="fs-caption text-caption padding-block-caption">

@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="First Sense - Edson Pavoni">
@@ -27,12 +26,9 @@ import "plyr/dist/plyr.css";
                 </div>
 
                 <div class="videowrapper | margin-top-300">
-                    <div class="plyr | video-scale" id="player">
-                        <iframe
-                            src="https://www.youtube.com/embed/bu5suNFf3rw?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-                            allowfullscreen
-                            allowtransparency
-                            allow="autoplay"></iframe>
+                    <div class="yt-facade video-scale" data-yt="bu5suNFf3rw" data-title="First Sense, video">
+                    	<img src="/assets/yt/bu5suNFf3rw.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+                    	<button type="button" class="yt-facade__play" aria-label="Play: First Sense, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
                     </div>
                 </div>
                 <div class="fs-caption text-caption padding-block-caption">
@@ -52,9 +48,10 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-500">
                     <img
                         src="/assets/pages/first-sense/01.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="The Queen, 2023. Parte da série de fotografias First Sense, de Edson Pavoni"
+                        width="700"
+                        height="394"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">The Queen</span>, 2023. Parte da série de fotografias <span class="fstyle-label">First Sense</span>, de Edson Pavoni.                    </div>
                 </div>
@@ -69,14 +66,19 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-300">
                     <img
                         src="/assets/pages/first-sense/02.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="I hate Burning Man and I want to go home, 2019, e On the poetics of justice. Da série de fotografias First Sense, de Edson Pavoni (1 of 2)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/03.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="I hate Burning Man and I want to go home, 2019, e On the poetics of justice. Da série de fotografias First Sense, de Edson Pavoni (2 of 2)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">I hate Burning Man and I want to go home</span>, 2019, e <span class="fstyle-label">On the poetics of justice</span>. <br/> 
                         Da série de fotografias <span class="fstyle-label">First Sense</span>, de Edson Pavoni.
@@ -94,19 +96,27 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-300">
                     <img
                         src="/assets/pages/first-sense/04.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="Could happen, We decided on not having the right words e Sunday rituals, 2019. Da série de fotografias First Sense, de Edson Pavoni (1 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/05.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="Could happen, We decided on not having the right words e Sunday rituals, 2019. Da série de fotografias First Sense, de Edson Pavoni (2 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/06.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Could happen, We decided on not having the right words e Sunday rituals, 2019. Da série de fotografias First Sense, de Edson Pavoni (3 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Could happen</span>, <span class="fstyle-label">We decided on not having the right words</span> e <span class="fstyle-label">Sunday rituals</span>, 2019. <br/> 
                         Da série de fotografias <span class="fstyle-label">First Sense</span>, de Edson Pavoni.
@@ -133,19 +143,27 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-300">
                     <img
                         src="/assets/pages/first-sense/07.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="I keep dreaming this, 2019, On the verge of carnaval e You're welcome. Da série de fotografias First Sense, de Edson Pavoni (1 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/08.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="I keep dreaming this, 2019, On the verge of carnaval e You're welcome. Da série de fotografias First Sense, de Edson Pavoni (2 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/09.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="I keep dreaming this, 2019, On the verge of carnaval e You're welcome. Da série de fotografias First Sense, de Edson Pavoni (3 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">I keep dreaming this</span>, 2019, <span class="fstyle-label">On the verge of carnaval</span> e <span class="fstyle-label">You're welcome</span>. <br/> 
                         Da série de fotografias <span class="fstyle-label">First Sense</span>, de Edson Pavoni.
@@ -166,19 +184,27 @@ import "plyr/dist/plyr.css";
                 <div class="margin-top-300">
                     <img
                         src="/assets/pages/first-sense/10.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="Olhos de cigana oblíqua e dissimulada, 2019, The dancer, 2019 e I answer to no one. Da série de fotografias First Sense, de Edson Pavoni (1 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/11.webp"
-                        alt="image"
-                        srcset=""
-                    />
-                    <img class="margin-top-200"
+                        alt="Olhos de cigana oblíqua e dissimulada, 2019, The dancer, 2019 e I answer to no one. Da série de fotografias First Sense, de Edson Pavoni (2 of 3)"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/first-sense/12.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Olhos de cigana oblíqua e dissimulada, 2019, The dancer, 2019 e I answer to no one. Da série de fotografias First Sense, de Edson Pavoni (3 of 3)"
+                        width="700"
+                        height="393"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Olhos de cigana oblíqua e dissimulada</span>, 2019, <span class="fstyle-label">The dancer</span>, 2019 e <span class="fstyle-label">I answer to no one</span>. <br/> 
                         Da série de fotografias <span class="fstyle-label">First Sense</span>, de Edson Pavoni.

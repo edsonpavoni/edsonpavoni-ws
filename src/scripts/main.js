@@ -1,107 +1,73 @@
-//nav
-const body = document.querySelector('body');
-
+// ---------- navigation ----------
 const btnMenu = document.querySelector(".primary-nav-btn");
 const btnLang = document.querySelector(".language-nav-btn");
 const btnCloseMenu = document.querySelector(".close-menu");
 const btnCloseLang = document.querySelector(".close-lang");
-
 const primaryNav = document.querySelector(".primary-nav");
 const languageNav = document.querySelector(".language-nav");
 
-const langNavEn = document.querySelector(".lang-navigation-en");
-const langNavBr = document.querySelector(".lang-navigation-br");
-const langNavEs = document.querySelector(".lang-navigation-es");
-const langNavCn = document.querySelector(".lang-navigation-cn");
+function openNav(nav, opener, closeBtn) {
+  nav.setAttribute("data-visible", "true");
+  opener.setAttribute("aria-expanded", "true");
+  closeBtn.focus();
+}
+function closeNav(nav, opener) {
+  if (nav.getAttribute("data-visible") !== "true") return false;
+  nav.setAttribute("data-visible", "false");
+  opener.setAttribute("aria-expanded", "false");
+  opener.focus();
+  return true;
+}
 
-const menuEn = document.querySelector(".menu-navigation-en");
-const menuBr = document.querySelector(".menu-navigation-br");
-const menuEs = document.querySelector(".menu-navigation-es");
-const menuCn = document.querySelector(".menu-navigation-cn");
+btnMenu.addEventListener("click", () => openNav(primaryNav, btnMenu, btnCloseMenu));
+btnLang.addEventListener("click", () => openNav(languageNav, btnLang, btnCloseLang));
+btnCloseMenu.addEventListener("click", () => closeNav(primaryNav, btnMenu));
+btnCloseLang.addEventListener("click", () => closeNav(languageNav, btnLang));
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (closeNav(primaryNav, btnMenu) || closeNav(languageNav, btnLang)) e.preventDefault();
+});
 
+// ---------- language-specific menus ----------
+const seg = window.location.pathname.split("/")[1];
+const current = ["en", "br", "es", "cn"].includes(seg) ? seg : "en";
+for (const code of ["en", "br", "es", "cn"]) {
+  document.querySelector(`.lang-navigation-${code}`).classList.toggle("hidden", code !== current);
+  document.querySelector(`.menu-navigation-${code}`).classList.toggle("hidden", code !== current);
+}
 
-btnMenu.addEventListener('click', () => {
-  primaryNav.setAttribute("data-visible", true);
-})
+// ---------- looping videos: load and play only when on screen ----------
+const loops = document.querySelectorAll("video[data-autoplay]");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (reduceMotion) {
+  // Show the poster and let the person start it themselves.
+  loops.forEach((v) => { v.controls = true; });
+} else if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const v = e.target;
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      }
+    },
+    { rootMargin: "300px 0px" }
+  );
+  loops.forEach((v) => io.observe(v));
+} else {
+  loops.forEach((v) => v.play().catch(() => {}));
+}
 
-btnLang.addEventListener('click', () => {
-  languageNav.setAttribute("data-visible", true);
-})
-
-btnCloseMenu.addEventListener('click', () => {
-  primaryNav.setAttribute("data-visible", false);
-})
-
-btnCloseLang.addEventListener('click', () => {
-  languageNav.setAttribute("data-visible", false);
-})
-
-// //brower language detection
-
-//language menu
-langNavEn.classList.add('hidden')
-langNavBr.classList.add('hidden')
-langNavEs.classList.add('hidden')
-langNavCn.classList.add('hidden')
-
-//navigation menu
-menuEn.classList.add('hidden')
-menuBr.classList.add('hidden')
-menuEs.classList.add('hidden')
-menuCn.classList.add('hidden')
-
-//language detection
-if (window.location.toString().includes("/en")) {
-    langNavEn.classList.remove('hidden')
-    langNavBr.classList.add('hidden')
-    langNavEs.classList.add('hidden')
-    langNavCn.classList.add('hidden')
-
-    menuEn.classList.remove('hidden')
-    menuBr.classList.add('hidden')
-    menuEs.classList.add('hidden')
-    menuCn.classList.add('hidden')
-  }
-  else if (window.location.toString().includes("/br")) {
-    langNavEn.classList.add('hidden')
-    langNavBr.classList.remove('hidden')
-    langNavEs.classList.add('hidden')
-    langNavCn.classList.add('hidden')
-
-    menuEn.classList.add('hidden')
-    menuBr.classList.remove('hidden')
-    menuEs.classList.add('hidden')
-    menuCn.classList.add('hidden')
-  }
-  else if (window.location.toString().includes("/es")) {
-    langNavEn.classList.add('hidden')
-    langNavBr.classList.add('hidden')
-    langNavEs.classList.remove('hidden')
-    langNavCn.classList.add('hidden')
-
-    menuEn.classList.add('hidden')
-    menuBr.classList.add('hidden')
-    menuEs.classList.remove('hidden')
-    menuCn.classList.add('hidden')
-  }
-  else if (window.location.toString().includes("/cn")) {
-    langNavEn.classList.add('hidden')
-    langNavBr.classList.add('hidden')
-    langNavEs.classList.add('hidden')
-    langNavCn.classList.remove('hidden')
-
-    menuEn.classList.add('hidden')
-    menuBr.classList.add('hidden')
-    menuEs.classList.add('hidden')
-    menuCn.classList.remove('hidden')
-  }
-
-
-
-
-//video player
-import Plyr from 'plyr';
-const player = new Plyr('#player', {});
-const playerInHonor = new Plyr('#player-in-honor', {});
-
-//language selection
+// ---------- YouTube embeds: poster first, player on click ("lite embed" pattern) ----------
+// The iframe is created inside the click handler, so YouTube autoplays on that same click.
+document.querySelectorAll(".yt-facade").forEach((facade) => {
+  facade.querySelector(".yt-facade__play").addEventListener("click", () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://www.youtube-nocookie.com/embed/${facade.dataset.yt}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
+    iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+    iframe.allowFullscreen = true;
+    iframe.title = facade.dataset.title || "Video";
+    iframe.className = "yt-facade__player";
+    facade.replaceChildren(iframe);
+  });
+});

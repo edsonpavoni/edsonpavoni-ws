@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 
 // Orbital Witnesses — collection / showcase page for edsonpavoni.art
 // v0.2 (2026-06-22): grid index of the twelve + one photograph per witness.
@@ -105,8 +104,7 @@ const witnesses = [
 
                 <!-- HERO MOTION VIDEO — first image people see (text hook sits above it).
                      Muted autoplay loop, encoded from documentation/Video Edits/website_001.mp4. -->
-                <video
-                    autoplay
+                <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop

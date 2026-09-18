@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /tools/
+Disallow: /accidentfree/
+Disallow: /index_meta/
+
+Sitemap: https://edsonpavoni.art/sitemap.xml

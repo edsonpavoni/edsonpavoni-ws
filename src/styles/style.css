@@ -3,14 +3,13 @@
 
   --clr-positive-front: #000;
   --clr-positive-front-medium: #4c4c4c;
-  --clr-positive-front-light: #7E7E7E;
+  --clr-positive-front-light: #6b6b6b; /* 5.3:1 on white, was #7E7E7E at 4.06:1 */
   --clr-positive-back: #fff;
 
   --clr-negative-front: #e8e8e8;
   --clr-negative-front-medium: #c9c9c9;
   --clr-negative-back: #101010;
 
-  --plyr-color-main: #000000;
   
   --ff-display: 'Rufina', serif;
   --ff-reading: 'Literata', serif;
@@ -24,7 +23,7 @@
   --fs-500: 1.25rem;
   --fs-400: 1rem;
   --fs-300: 0.9375rem;
-  --fs-200: 0.6rem;
+  --fs-200: 0.75rem;
 
   --fs-display: var(--fs-700);
   --fs-title: var(--fs-500);
@@ -116,6 +115,7 @@ img,
 picture,
 svg {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -156,10 +156,6 @@ svg {
 .video-scale-wide {
   aspect-ratio: 21 / 9;
   width: 100%;
-}
-
-.plyr.plyr--stopped .plyr__controls { 
-  display: none 
 }
 
 .sqr-image-gallery {
@@ -391,3 +387,21 @@ a:hover { text-decoration: underline; color: var(--clr-positive-front-medium); }
 .margin-top-500 {  margin-top: var(--size-500); }
 .margin-top-600 {  margin-top: var(--size-600); }
 .margin-top-900 {  margin-top: var(--size-900); }
+
+/* Captions on dark sections need a lighter grey to keep 4.5:1 contrast (Lighthouse, 2026-09-18) */
+.f-style-negative .text-caption,
+.container-negative .text-caption { color: var(--clr-negative-front-medium); }
+
+/* YouTube facade: a local poster and a play button. The real player loads on click (see main.js).
+   Keeps ~1.9 MB of YouTube code off the initial load and fixes the LCP. */
+.yt-facade { position: relative; background: #000; overflow: hidden; }
+.yt-facade > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.yt-facade__play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 4.25rem; height: 4.25rem; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75); color: #fff; cursor: pointer; display: grid; place-items: center;
+}
+.yt-facade__play svg { width: 1.5rem; height: 1.5rem; margin-left: 0.2rem; }
+.yt-facade__play:hover { background: #000; }
+.yt-facade__play:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.yt-facade__player { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }

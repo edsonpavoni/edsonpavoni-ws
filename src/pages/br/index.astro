@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="Edson Pavoni">
@@ -19,12 +18,9 @@ import "plyr/dist/plyr.css";
 
 				</div>
 				<div class="videowrapper | margin-top-200">
-					<div class="plyr | video-scale" id="player">
-						<iframe
-							src="https://www.youtube.com/embed/HgCzPN8iEBg?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-							allowfullscreen
-							allowtransparency
-							allow="autoplay"></iframe>
+					<div class="yt-facade video-scale" data-yt="HgCzPN8iEBg" data-title="Edson Pavoni, video introduction">
+						<img src="/assets/yt/HgCzPN8iEBg.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+						<button type="button" class="yt-facade__play" aria-label="Play: Edson Pavoni, video introduction"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
 					</div>
 				</div>
 				<div class="fs-caption text-caption padding-block-caption">
@@ -35,9 +31,9 @@ import "plyr/dist/plyr.css";
 		<section>
 			<div class="container">
 				<div class="secundary-title">
-					<h1 class="fs-display fw-bold margin-top-600">
+					<h2 class="fs-display fw-bold margin-top-600">
 						Obras Selecionadas
-					</h1>
+					</h2>
 				</div>
 				<div class="artwork">
 					<div class="work-title">
@@ -56,9 +52,10 @@ import "plyr/dist/plyr.css";
 						<a href="/br/orbital-temple">
 							<img
 								src="/assets/home/23OrbitalTemple.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Templo Orbital no espaço. Render 3D por RiseNY&amp;Partners"
+								width="700"
+								height="394"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -71,8 +68,10 @@ import "plyr/dist/plyr.css";
 							<img
 								src="/assets/home/22OrbitalTemple.webp"
 								alt="video"
-								srcset=""
-							/>
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -101,8 +100,10 @@ import "plyr/dist/plyr.css";
 							<img
 								src="/assets/pages/orbital-witnesses/witnesses/ow4_c.jpg"
 								alt="Uma Testemunha Orbital com tampa de cobre."
-								srcset=""
-							/>
+								width="2048"
+								height="1365"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -110,8 +111,8 @@ import "plyr/dist/plyr.css";
 						/>Foto de Edson Pavoni.
 					</div>
 					<div class="work-video | margin-top-200">
-						<a href="/br/orbital-witnesses">
-							<video autoplay muted playsinline loop poster="/assets/pages/orbital-witnesses/witnesses/motion_poster.jpg" class="video-scale">
+						<a href="/br/orbital-witnesses" aria-label="Testemunhas Orbitais">
+							<video data-autoplay preload="none" muted playsinline loop poster="/assets/pages/orbital-witnesses/witnesses/motion_poster.jpg" class="video-scale">
 								<source src="/assets/pages/orbital-witnesses/witnesses/motion.mp4" type="video/mp4" />
 								<source src="/assets/pages/orbital-witnesses/witnesses/motion.webm" type="video/webm" />
 							</video>
@@ -140,9 +141,11 @@ import "plyr/dist/plyr.css";
 						<a href="/br/oquenaopodemos">
 							<img
 								src="/assets/pages/naopodemos/gifnovo.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="O que não podemos esquecer na Casa Cósmica, São Paulo. Fotografias por Estúdio Em Obra"
+								width="700"
+								height="467"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -170,9 +173,11 @@ import "plyr/dist/plyr.css";
 						<a href="/br/landscapes-of-the-mind">
 							<img
 								src="/assets/home/21LandscapesoftheMindQuadrado.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Duas pessoas participam da instalação Landscapes of the Mind em Nova Iorque, USA. Foto dos artistas"
+								width="700"
+								height="700"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -202,9 +207,11 @@ import "plyr/dist/plyr.css";
 						<a href="/br/sacred-in-flux">
 							<img
 								src="/assets/home/20SagradoemFluxo.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Sagrado em Fluxo exibido em São Paulo, Brasil. Fotos por Filipe Berndt"
+								width="1200"
+								height="800"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -230,9 +237,8 @@ import "plyr/dist/plyr.css";
 						mais de 500 participantes.
 
 					</div>
-					<a href="/br/crown-shyness">
-						<video
-							autoplay
+					<a href="/br/crown-shyness" aria-label="Timidez das Copas">
+						<video data-autoplay preload="none"
 							muted
 							playsinline
 							loop
@@ -275,23 +281,26 @@ import "plyr/dist/plyr.css";
 						<a href="/br/inumeraveis">
 							<img
 								src="/assets/home/18Inumeraveis.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Plano para o Memorial Inumeráveis. Render 3D por RiseNY&amp;Partners (1 of 2)"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="work-image | margin-top-200">
 						<a href="/br/inumeraveis">
 							<img
 								src="/assets/home/17AInumeraveis.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Plano para o Memorial Inumeráveis. Render 3D por RiseNY&amp;Partners (2 of 2)"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
-					<a href="/br/inumeraveis">
-						<video
-							autoplay
+					<a href="/br/inumeraveis" aria-label="Inumeraveis Memorial">
+						<video data-autoplay preload="none"
 							muted
 							playsinline
 							loop
@@ -343,8 +352,11 @@ import "plyr/dist/plyr.css";
 								/>
 								<img
 									src="/assets/home/16InvisibleBlue_.webp"
-									alt=""
-								/>
+									alt="Invisible Blue no Ludwig Museum of Contemporary Art. Fotografia por Bálint Jaska"
+									width="700"
+									height="933"
+									loading="lazy"
+									decoding="async"/>
 							</picture>
 						</a>
 					</div>
@@ -376,15 +388,16 @@ import "plyr/dist/plyr.css";
 						<a href="/br/over-the-face-of-new-waters">
 							<img
 								src="/assets/home/15OvertheFaceofNewWaters.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Sobre a Face de Novas Águas. Imagens por Gee Galvão"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 
-					<a href="/br/over-the-face-of-new-waters">
-						<video
-							autoplay
+					<a href="/br/over-the-face-of-new-waters" aria-label="Over the Face of New Waters">
+						<video data-autoplay preload="none"
 							muted
 							playsinline
 							loop
@@ -429,14 +442,15 @@ import "plyr/dist/plyr.css";
 						<a href="/br/the-waters-are-breaking">
 							<img
 								src="/assets/home/13TheWatersareBreaking.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Gabriela Veiga interage com projeções feitas com tecnologia generativa. Imagens por Rodrigo Rosa &amp; Giorgio D'Onofrio"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
-					<a href="/br/the-waters-are-breaking">
-						<video
-							autoplay
+					<a href="/br/the-waters-are-breaking" aria-label="The Waters are Breaking">
+						<video data-autoplay preload="none"
 							muted
 							playsinline
 							loop
@@ -479,15 +493,16 @@ import "plyr/dist/plyr.css";
 						<a href="/br/a-petal-for-three">
 							<img
 								src="/assets/home/11APetalforThree.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="Participantes interagem com Uma Pétala para Três em São Paulo. Foto por Rafael Socrates"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div>
-						<a href="/br/a-petal-for-three">
-							<video
-								autoplay
+						<a href="/br/a-petal-for-three" aria-label="Uma Pétala para Três">
+							<video data-autoplay preload="none"
 								muted
 								playsinline
 								loop
@@ -530,15 +545,16 @@ import "plyr/dist/plyr.css";
 						<a href="/br/white-mirror">
 							<img
 								src="/assets/home/09WhiteMirror.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="The White Mirror, painel é ativado quando pessoas passam por ele. Imagens por Rafael Socrates"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div>
-						<a href="/br/white-mirror">
-							<video
-								autoplay
+						<a href="/br/white-mirror" aria-label="White Mirror">
+							<video data-autoplay preload="none"
 								muted
 								playsinline
 								loop
@@ -581,18 +597,22 @@ import "plyr/dist/plyr.css";
 						<a href="/br/first-sense">
 							<img
 								src="/assets/home/07FirstSense.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="First Sense é uma série de fotografias em andamento por Edson Pavoni (1 of 2)"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="work-image | margin-top-200">
 						<a href="/br/first-sense">
 							<img
 								src="/assets/home/06FirstSense.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="First Sense é uma série de fotografias em andamento por Edson Pavoni (2 of 2)"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
@@ -618,14 +638,15 @@ import "plyr/dist/plyr.css";
 						<a href="/br/the-love-project">
 							<img
 								src="/assets/home/05TheLoveProject.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="The Love Project foi uma instalação performática. Imagens por Jorge Teivelis Neto"
+								width="700"
+								height="466"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
-					<a href="/br/the-love-project">
-						<video
-							autoplay
+					<a href="/br/the-love-project" aria-label="The Love Project">
+						<video data-autoplay preload="none"
 							muted
 							playsinline
 							loop
@@ -669,23 +690,26 @@ import "plyr/dist/plyr.css";
 						<a href="/br/a-place-to-departure">
 							<img
 								src="/assets/home/03APlacetoDeparture.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="A Place to Departure na China, fotografado por Pedrinho Fonseca. Imagens da instalação em Dubai por Edson Pavoni (1 of 2)"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
 					<div class="work-image | margin-top-200">
 						<a href="/br/a-place-to-departure">
 							<img
 								src="/assets/home/02APlacetoDeparture.webp"
-								alt="image"
-								srcset=""
-							/>
+								alt="A Place to Departure na China, fotografado por Pedrinho Fonseca. Imagens da instalação em Dubai por Edson Pavoni (2 of 2)"
+								width="700"
+								height="394"
+								loading="lazy"
+								decoding="async"/>
 						</a>
 					</div>
-					<a href="/br/a-place-to-departure">
-						<video
-							autoplay
+					<a href="/br/a-place-to-departure" aria-label="A Place to Departure">
+						<video data-autoplay preload="none"
 							muted
 							playsinline
 							loop
@@ -715,9 +739,9 @@ import "plyr/dist/plyr.css";
 			<div class="container">
 				<div class="selected-works">
 					<div class="secundary-title">
-						<h1 class="fs-display fw-bold margin-top-600">
+						<h2 class="fs-display fw-bold margin-top-600">
 							Poesia
-						</h1>
+						</h2>
 					</div>
 
 					<div class="artwork">
@@ -785,12 +809,9 @@ import "plyr/dist/plyr.css";
 						</div>
 
 						<div class="videowrapper | margin-top-300">
-							<div class="video-scale" id="player-in-honor">
-								<iframe
-									src="https://www.youtube.com/embed/nNmEZFtWXPs?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-									allowfullscreen
-									allowtransparency
-									allow="autoplay"></iframe>
+							<div class="yt-facade video-scale" data-yt="nNmEZFtWXPs" data-title="Edson Pavoni, video">
+								<img src="/assets/yt/nNmEZFtWXPs.webp" alt="" width="1280" height="720" loading="lazy" decoding="async" />
+								<button type="button" class="yt-facade__play" aria-label="Play: Edson Pavoni, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
 							</div>
 						</div>
 						<div
@@ -828,9 +849,9 @@ import "plyr/dist/plyr.css";
 		<div class="container-negative | f-style-negative margin-top-600">
 			<div class="container padding-block-200">
 				<div class="secundary-title">
-					<h1 class="fs-display fw-bold margin-top-600">
+					<h2 class="fs-display fw-bold margin-top-600">
 						Uma ideia multiplanetária para um futuro não distópico
-					</h1>
+					</h2>
 				</div>
 
 				<div class="artwork">
@@ -859,23 +880,29 @@ import "plyr/dist/plyr.css";
 					<div class="work-image | margin-top-300">
 						<img
 							src="/assets/home/00APlacetoDepartureMars.webp"
-							alt="image"
-							srcset=""
-						/>
+							alt="Planos para A Place to Departure em abrigos humanos em Marte Render 3D por Guilherme Bullejos (1 of 3)"
+							width="700"
+							height="394"
+							loading="lazy"
+							decoding="async"/>
 					</div>
 					<div class="work-image | margin-top-200">
 						<img
 							src="/assets/home/00APlacetoDepartureMars2.webp"
-							alt="image"
-							srcset=""
-						/>
+							alt="Planos para A Place to Departure em abrigos humanos em Marte Render 3D por Guilherme Bullejos (2 of 3)"
+							width="700"
+							height="394"
+							loading="lazy"
+							decoding="async"/>
 					</div>
 					<div class="work-image | margin-top-200">
 						<img
 							src="/assets/home/00APlacetoDepartureMars3.webp"
-							alt="image"
-							srcset=""
-						/>
+							alt="Planos para A Place to Departure em abrigos humanos em Marte Render 3D por Guilherme Bullejos (3 of 3)"
+							width="700"
+							height="394"
+							loading="lazy"
+							decoding="async"/>
 					</div>
 					<div class="fs-caption text-caption padding-block-caption">
 						Planos para <span class="fstyle-label"

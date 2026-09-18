@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="A Petal for Three - Edson Pavoni">
@@ -29,12 +28,9 @@ import "plyr/dist/plyr.css";
                 </div>
 
                 <div class="videowrapper | margin-top-300">
-                    <div class="plyr | video-scale" id="player">
-                        <iframe
-                            src="https://www.youtube.com/embed/q5EyHP6vuBA?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-                            allowfullscreen
-                            allowtransparency
-                            allow="autoplay"></iframe>
+                    <div class="yt-facade video-scale" data-yt="q5EyHP6vuBA" data-title="A Petal for Three, video">
+                    	<img src="/assets/yt/q5EyHP6vuBA.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+                    	<button type="button" class="yt-facade__play" aria-label="Play: A Petal for Three, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
                     </div>
                 </div>
                 <div class="fs-caption text-caption padding-block-caption">
@@ -55,8 +51,7 @@ import "plyr/dist/plyr.css";
 
                 <div class="margin-top-300">
 
-                    <video
-                        autoplay
+                    <video data-autoplay preload="none"
                         muted
                         playsinline
                         loop
@@ -73,11 +68,13 @@ import "plyr/dist/plyr.css";
                         />
                     </video>
 
-                    <img class="margin-top-200"
+                    <img
+                        class="margin-top-200"
                         src="/assets/pages/a-petal/02.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Visitantes interagem com a obra Uma Pétala pra Três. Fotos por Rafael Socrates"
+                        width="700"
+                        height="363"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                        Visitantes interagem com a obra <span class="fstyle-label">Uma Pétala pra Três</span>.
                         <br />Fotos por Rafael Socrates.
@@ -96,17 +93,23 @@ import "plyr/dist/plyr.css";
                     de cada pessoa é vista em constante movimento, mas, ao mesmo tempo, integrando uma única e muito maior imagem.
                 </div>
 
-                <img class="margin-top-400"
+                <img
+                        class="margin-top-400"
                         src="/assets/pages/a-petal/04.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Visitantes interagem com a instalação Uma Pétala pra Três. Fotos por Rafael Socrates (1 of 2)"
+                        width="700"
+                        height="315"
+                        loading="lazy"
+                        decoding="async"/>
 
-                <img class="margin-top-200"
+                <img
+                    class="margin-top-200"
                     src="/assets/pages/a-petal/03.webp"
-                    alt="image"
-                    srcset=""
-                />
+                    alt="Visitantes interagem com a instalação Uma Pétala pra Três. Fotos por Rafael Socrates (2 of 2)"
+                    width="700"
+                    height="394"
+                    loading="lazy"
+                    decoding="async"/>
 
                 <div class="fs-caption text-caption padding-block-caption">
                     Visitantes interagem com a instalação <span class="fstyle-label">Uma Pétala pra Três</span>.

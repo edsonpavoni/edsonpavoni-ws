@@ -1,6 +1,20 @@
 {
   "hosting": {
     "public": "dist",
-    "ignore": []
+    "ignore": [],
+    "headers": [
+      {
+        "source": "/_astro/**",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      },
+      {
+        "source": "/assets/**",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|webp|png|svg|ico|mp4|webm|woff2)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      }
+    ]
   }
 }

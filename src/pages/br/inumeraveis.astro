@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/style.css";
-import "plyr/dist/plyr.css";
 ---
 
 <Layout title="Inumeraveis Memorial - Edson Pavoni">
@@ -28,12 +27,9 @@ import "plyr/dist/plyr.css";
                 </div>
 
                 <div class="videowrapper | margin-top-300">
-                    <div class="plyr | video-scale" id="player">
-                        <iframe
-                            src="https://www.youtube.com/embed/z3FoA8zFcUs?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
-                            allowfullscreen
-                            allowtransparency
-                            allow="autoplay"></iframe>
+                    <div class="yt-facade video-scale" data-yt="z3FoA8zFcUs" data-title="Inumeraveis Memorial, video">
+                    	<img src="/assets/yt/z3FoA8zFcUs.webp" alt="" width="1280" height="720" loading="eager" fetchpriority="high" decoding="async" />
+                    	<button type="button" class="yt-facade__play" aria-label="Play: Inumeraveis Memorial, video"><svg aria-hidden="true" focusable="false" viewBox="0 0 18 18" width="18" height="18"><path d="M15.562 8.1 3.87.225C3.052-.337 2 .225 2 1.125v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8" fill="currentColor"/></svg></button>
                     </div>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label"> Memorial Inumeráveis</span> vídeo introdução,
@@ -69,12 +65,12 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/inumeraveis/01.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis website and architectural plan. 3D rendering by Guilherme Bullejos"
+                        width="700"
+                        height="393"
+                        decoding="async"/>
 
-                    <video
-                    autoplay
+                    <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop
@@ -136,9 +132,11 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/inumeraveis/02.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis , plano arquitetônico. Render 3D por Guilherme Bullejos"
+                        width="700"
+                        height="394"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label"> Memorial Inumeráveis </span>, plano arquitetônico.
                         <br /> Render 3D por Guilherme Bullejos.
@@ -158,8 +156,7 @@ import "plyr/dist/plyr.css";
                  </div> 
                 
                 <div class="image-container">
-                    <video
-                        autoplay
+                    <video data-autoplay preload="none"
                         muted
                         playsinline
                         loop
@@ -196,16 +193,20 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/inumeraveis/04.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveisplano arquitetônico. Render 3D por Guilherme Bullejos (1 of 2)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/inumeraveis/05.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveisplano arquitetônico. Render 3D por Guilherme Bullejos (2 of 2)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Memorial Inumeráveis</span>plano arquitetônico.
                         <br /> Render 3D por Guilherme Bullejos.
@@ -234,8 +235,7 @@ import "plyr/dist/plyr.css";
 
                 <div class="image-container">
 
-                    <video
-                    autoplay
+                    <video data-autoplay preload="none"
                     muted
                     playsinline
                     loop
@@ -255,16 +255,20 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-200"
                         src="/assets/pages/inumeraveis/06.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis, plano arquitônico. Render 3D por Guilherme Bullejos e RiseNY&amp;Partners (1 of 2)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/inumeraveis/07.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis, plano arquitônico. Render 3D por Guilherme Bullejos e RiseNY&amp;Partners (2 of 2)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Memorial Inumeráveis</span>, plano arquitônico.
@@ -290,16 +294,20 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/inumeraveis/08.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis, plano arquitetônico. Render 3D rendering por Guilherme Bullejos (1 of 2)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/inumeraveis/09.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis, plano arquitetônico. Render 3D rendering por Guilherme Bullejos (2 of 2)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
                     <div class="fs-caption text-caption padding-block-caption">
                         <span class="fstyle-label">Memorial Inumeráveis</span>, plano arquitetônico.
                         <br /> Render 3D rendering por Guilherme Bullejos.
@@ -337,19 +345,22 @@ import "plyr/dist/plyr.css";
                     <img
                         class="margin-top-300"
                         src="/assets/pages/inumeraveis/10.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis Memorial , plano arquitetônico. Render 3D por Guilherme Bullejos e RiseNY&amp;Partners (1 of 2)"
+                        width="700"
+                        height="467"
+                        loading="lazy"
+                        decoding="async"/>
 
                     <img
                         class="margin-top-200"
                         src="/assets/pages/inumeraveis/11.webp"
-                        alt="image"
-                        srcset=""
-                    />
+                        alt="Memorial Inumeráveis Memorial , plano arquitetônico. Render 3D por Guilherme Bullejos e RiseNY&amp;Partners (2 of 2)"
+                        width="700"
+                        height="468"
+                        loading="lazy"
+                        decoding="async"/>
 
-                    <video
-                        autoplay
+                    <video data-autoplay preload="none"
                         muted
                         playsinline
                         loop
