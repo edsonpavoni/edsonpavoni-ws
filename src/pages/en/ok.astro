@@ -1,0 +1,211 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/style.css";
+
+// O.K. — work page for edsonpavoni.art
+// v1.0 SAFE (2026-09-16): the short, publishable version. English only.
+// The fuller draft (video slots, the name audio, making of, quote bank) is parked at
+// 0000 AI/artworks/ok-shamel-pitts/website/ok-FULL-DRAFT-PARKED-2026-09-16.astro
+//
+// Rules for this page:
+//   - Shamel first in every credit. "Tushrik Fredericks". Official credits: SCRIPTS-3-VIDEOS.md:30.
+//   - Nothing from the private recordings (Look Inwards, the name audio) until Shamel says yes.
+//   - Mechanism copy follows the deck ("transmitted in real time"), not "every single beat".
+
+const base = "/assets/pages/ok";
+
+// LOOPS — muted autoplay videos made from Edson's GIFs (GIF → webm + mp4 + poster).
+// To add one: convert into public/assets/pages/ok/, then add a line here.
+const loops = [
+    { name: "loop", caption: "The paper body of the sculpture, moving." },
+];
+---
+
+<Layout title="O.K. - Edson Pavoni">
+    <main>
+        <section>
+            <div class="container">
+                <div class="welcome-tile margin-top-900">
+                    <span class="fs-logo margin-top-600">Edson Pavoni</span>
+                    <h1 class="fs-display fw-bold text-positive margin-top-200">
+                        O.K.
+                    </h1>
+                </div>
+
+                <div class="fs-label fstyle-label margin-top-600">
+                    kinetic sculpture, dance and film / 2026
+                </div>
+
+                <div class="artwork | margin-top-500">
+                    <span class="fs-sub-title">Can a machine earn its place in dance?</span><br /><br />
+                    An artwork by Shamel Pitts | TRIBE and Edson Pavoni.
+                    <br /><br />
+                    Two dancers face each other. From beginning to end, they remain in search of eye contact.
+                    Each wears a heart rate sensor against the skin.
+                    <br /><br />
+                    Between them stands a kinetic sculpture made of folded paper, with two sides that move
+                    independently. One side answers to Shamel's heart, the other to Tushrik's. As their
+                    heart rates rise, the sculpture moves faster. As they calm, its motion slows.
+                    <br /><br />
+                    The human body leads, and the machine doesn't follow: it witnesses, holding space for
+                    the ritual between them.
+                </div>
+
+                <img
+                    class="margin-top-300"
+                    src={`${base}/ok_03.jpg`}
+                    width="2048"
+                    height="1152"
+                    alt="Shamel Pitts and Tushrik Fredericks facing each other across the stage, the folded paper sculpture between them."
+                />
+                <div class="fs-caption text-caption padding-block-caption">
+                    <span class="fstyle-label">O.K.</span>, film still.
+                </div>
+
+                <div class="margin-top-500">
+                    <span class="fs-sub-title">One gesture</span>
+                    <br /><br />
+                    The choreography draws from the stare-down before a boxing match. Just before the fight,
+                    the two opponents stand face to face, not to fight, but to recognize each other as mythic
+                    doubles. In O.K. the stare-down becomes a stare inward: the ritual of seeing ourselves in
+                    the other, raw, distorted and divine.
+                    <br /><br />
+                    The dancers move in relation to each other without ever touching. Their movements shift
+                    from stillness to intensity, and the sculpture echoes the arc.
+                </div>
+
+                <!-- cut2: documentation/assets/cut2.mov (also exported as gif_cut2.gif) -->
+                <video data-autoplay preload="none" muted playsinline loop poster={`${base}/cut2_poster.jpg`} class="video-scale margin-top-400">
+                    <source src={`${base}/cut2.webm`} type="video/webm" />
+                    <source src={`${base}/cut2.mp4`} type="video/mp4" />
+                </video>
+                <div class="fs-caption text-caption padding-block-caption">
+                    Hand to pulse. The gesture that starts the sculpture.
+                </div>
+
+                <div class="margin-top-400">
+                    When the dancers meet there is an invitation. An "OK" that signals the ignition of the
+                    dance, a mutual consent to begin. At the end, after the tension and the release, one
+                    dancer walks away, and his side of the sculpture goes still. The dancer who remains turns
+                    to the camera and asks, simply: OK?
+                    <br /><br />
+                    A final invitation, for the viewer to listen to their own heartbeat, and to begin their
+                    own dance.
+                </div>
+
+                <div class="fs-eye | margin-top-400">
+                    Man and machine allowing themselves to soften in the context of pressure.
+                </div>
+
+                <img class="margin-top-400" src={`${base}/ok_02.jpg`}
+                    width="2048"
+                    height="1152" loading="lazy" alt="The two dancers in a wide duet in front of the paper sculpture." />
+                <img class="margin-top-200" src={`${base}/ok_06.jpg`}
+                    width="2048"
+                    height="1152" loading="lazy" alt="The two dancers in an embrace, close to the folded paper surface." />
+                <img class="margin-top-200" src={`${base}/ok_04.jpg`}
+                    width="2048"
+                    height="1152" loading="lazy" alt="Shamel Pitts alone, bent over, breathing, in front of the sculpture." />
+                <div class="fs-caption text-caption padding-block-caption">
+                    Stills from <span class="fstyle-label">O.K.</span>
+                </div>
+
+                <div class="margin-top-600">
+                    <span class="fs-sub-title">The techno heart</span>
+                    <br /><br />
+                    Shamel nicknamed the sculpture the techno heart. It was made with paper, mechanics,
+                    electronics and software, all built for this piece.
+                    <br /><br />
+                    Each dancer's heartbeat is transmitted in real time from a sensor on the body to a
+                    computer, which drives two linear actuators, one for each side of the sculpture. Two
+                    heart rhythms shaping one physical form.
+                </div>
+
+                {loops.map((l) => (
+                    <>
+                        <video data-autoplay preload="none"
+                            muted
+                            playsinline
+                            loop
+                            poster={`${base}/${l.name}_poster.jpg`}
+                            class="video-scale margin-top-300"
+                        >
+                            <source src={`${base}/${l.name}.webm`} type="video/webm" />
+                            <source src={`${base}/${l.name}.mp4`} type="video/mp4" />
+                        </video>
+                        <div class="fs-caption text-caption padding-block-caption">{l.caption}</div>
+                    </>
+                ))}
+
+                <div class="margin-top-400">
+                    The creature's body is paper, folded by hand using traditional origami tessellations.
+                    The folds act like a score: they decide how it can move before it ever moves.
+                    <br /><br />
+                    Inside, the mechanics are inspired by the muscle of the human heart, contracting and
+                    releasing to give the creature its movement vocabulary.
+                    <br /><br />
+                    The electronics and code were custom built, and they never ask for attention. The bodies
+                    in motion are the protagonists.
+                </div>
+
+                <div class="fs-eye | margin-top-400">
+                    A witnessing machine that holds two hearts in one body.
+                </div>
+
+                <div class="margin-top-600">
+                    <span class="fs-sub-title">A research into the poetics of technology in dance</span>
+                    <br /><br />
+                    The work began with motion tracking, pose estimation and biomechanical skeleton models,
+                    filmed at high frame rate, to see how dance defies prediction. After that exploration,
+                    the research moved in a different direction: toward the physicality of sculpture, and
+                    away from the pixel as output.
+                    <br /><br />
+                    No screen. No music. The only sound is the breath, the steps, and the machine.
+                    <br /><br />
+                    <span class="fstyle-label">O.K.</span> is an attempt at a new ritual, composed of the
+                    sound of every breath, every step, an intimate camera, sometimes extremely close, and a
+                    machine that holds two hearts. With TRIBE, the research continues.
+                </div>
+
+                <!-- cut1: documentation/assets/cut1.mov (also exported as gif_cut1.gif). Moved near the end, Edson 2026-09-16. -->
+                <video data-autoplay preload="none" muted playsinline loop poster={`${base}/cut1_poster.jpg`} class="video-scale margin-top-400">
+                    <source src={`${base}/cut1.webm`} type="video/webm" />
+                    <source src={`${base}/cut1.mp4`} type="video/mp4" />
+                </video>
+                <div class="fs-caption text-caption padding-block-caption">
+                    The duet, and the sculpture moving with it.
+                </div>
+
+                <!-- CREDITS — official list, SCRIPTS-3-VIDEOS.md:30. Do not reorder. -->
+                <div class="fs-credits | margin-top-500">
+                    <span class="fs-sub-title">Credits</span>
+                    <br /><br />
+                    Commissioned by Jacob's Pillow with support from YoungArts, produced by TRIBE.
+                    Developed at Onassis ONX Studio, New York.
+                    <br /><br />
+                    <span class="fs-credits-bold">Artists</span><br />
+                    Shamel Pitts, Tushrik Fredericks and Edson Pavoni
+                    <br /><br />
+                    <span class="fs-credits-bold">Curator</span><br />
+                    Pamela Tatge
+                    <br /><br />
+                    <span class="fs-credits-bold">Dance</span><br />
+                    Choreography: Shamel Pitts | TRIBE<br />
+                    Dancers: Shamel Pitts and Tushrik Fredericks
+                    <br /><br />
+                    <span class="fs-credits-bold">Film</span><br />
+                    Director: Edson Pavoni<br />
+                    Assistant Director: Arjun Hassard<br />
+                    Director of Photography: Jamie Ellington<br />
+                    Editing, Audio and Color: Edson Pavoni
+                    <br /><br />
+                    <span class="fs-credits-bold">Special thanks</span><br />
+                    Jazia Hammoudi, Aaron Santiago, Matthew Niederhauser and Matt Toups, from the Onassis ONX team.<br />
+                    David Imani, Jared Fine, Nick Kepley and Bonnie Spann, from Jacob's Pillow.<br />
+                    Brittany Wilson, E Katrina Lewis, Eric Umble and Mirelle Martins, from TRIBE.
+                    <br /><br /><br /><br />
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>
