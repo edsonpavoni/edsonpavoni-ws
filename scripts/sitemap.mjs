@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const SITE = 'https://edsonpavoni.art';
 const DIST = new URL('../dist/', import.meta.url).pathname;
-const EXCLUDE = [/^\/tools\//, /^\/accidentfree\//, /^\/index_meta\//, /^\/404/];
+const EXCLUDE = [/^\/tools\//, /^\/index_meta\//, /^\/404/];
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
